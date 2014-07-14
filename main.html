@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Carona Solidaria</title>
+        <link rel="shortcut icon" href="images/logo.ico">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" href="css/stylesheet.css"/>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+        <script src="js/scriptMain.js"></script>
+    </head>
+    <body>
+        <nav id="menu">
+            <ul>
+                <li class="selectedM"><a href="#">Inicio</a></li>
+                <li><a href="#">Siguiendo</a></li>
+                <li><a href="#">Seguidores</a></li>
+                <li><a href="#">Notificaciones</a></li>
+                <li><a href="#">Peticiones</a></li>
+                <li><a href="#">Cuenta</a></li>
+            </ul>
+        </nav>
+
+        <div id="sidebar">
+            <img alt="logo" src="images/logo.png" id="logoMain" />
+
+            <!--Menu del sidebar-->
+            <div id="sidebarMenu">
+                <ul>
+                    <li><a href="javascript:indicarHoraRuta()">Crear Nueva Ruta</a></li>
+                    <li><a href="#">Acerca De</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="map-canvas"></div>
+
+    </body>
+</html>

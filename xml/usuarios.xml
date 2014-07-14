@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<usuarios>
+	<usuario>
+		<id>cm001</id>
+		<user>chagemed</user>
+		<password>medina</password>
+		<nombre>Charlie</nombre>
+		<apellido>Medina</apellido>
+		<carro>1</carro>
+	</usuario>
+	<usuario>
+		<id>jr002</id>	
+		<user>jegerima</user>
+		<password>rivera</password>
+		<nombre>Jefferson</nombre>
+		<apellido>Rivera</apellido>
+		<carro>1</carro>
+	</usuario>
+	<usuario>
+		<id>lt003</id>
+		<user>ltamayo</user>
+		<password>tamayo</password>
+		<nombre>Leonardo</nombre>
+		<apellido>Tamayo</apellido>
+		<carro>1</carro>
+	</usuario>
+</usuarios>

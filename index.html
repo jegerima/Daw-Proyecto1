@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Carona Solidaria</title>
+        <link rel="shortcut icon" href="images/logo.ico">
+        <link rel="stylesheet" href="css/stylesheet.css"/>
+        <script src="js/scriptIndex.js"></script>
+    </head>
+    <body>
+        <img alt="fondo" src="images/fondo_gye.jpg" id="background" />
+        <img alt="logo" src="images/logo.png" id="logo" />
+        <div id="content">
+            <div id="login" class="formCntr">
+                <p id="titulo">Carona Solidaria</p>
+                <p id="subtitulo">"D&aacute;ndonos la mano"</p>
+                <div id="leyenda">&Uacute;nete a la red m&aacute;s grande de amigos al volante</div>
+                <form id="formSubmit" action="javascript:iniciarSesion()">
+                    <div id="leyenda"><input type="text" id="txtUser" required class="textBox" name="txtUser" placeholder="Usuario" autofocus="true"/></div>
+                    <div id="leyenda"><input type="password" id="txtPass" required class="textBox" name="txtPass" placeholder="Contraseña"/></div>  
+                    <div id="leyenda"><input type="submit" id="btnIniciar" class="botonSubmit" value="Iniciar sesión"/></div>
+                </form>
+                
+                <div id="leyenda">¿No tienes una cuenta? <b><a id="registrar" href="#" onclick="javascript:crearFrmRegistro()">¡Reg&iacute;strate ahora!</a></b></div>
+                
+            </div>
+        </div>
+    </body>
+</html>

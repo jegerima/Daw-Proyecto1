@@ -1,0 +1,302 @@
+html{
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: White;
+}
+
+#background{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+#content{
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: rgba(51,51,51,0.7);
+}
+
+#logo{
+    position: absolute;
+    top: 60%; /* Buscamos el centro horizontal (relativo) del navegador */
+    left: 85%; /* Buscamos el centro vertical (relativo) del navegador */
+    width: 400px; /* Definimos el ancho del objeto a centrar */
+    height: 400px; /* Definimos el alto del objeto a centrar */
+    margin-top: -250px; /* Restamos la mitad de la altura del objeto con un margin-top */
+    margin-left: -300px; /* Restamos la mitad de la anchura del objeto con un margin-left */
+    z-index: 2;
+    border-radius:30px;
+}
+
+.formCntr{
+    position: absolute;
+    top: 50%; /* Buscamos el centro horizontal (relativo) del navegador */
+    left: 35%; /* Buscamos el centro vertical (relativo) del navegador */
+    width: 600px; /* Definimos el ancho del objeto a centrar */
+    height: 400px; /* Definimos el alto del objeto a centrar */
+    margin-top: -200px; /* Restamos la mitad de la altura del objeto con un margin-top */
+    margin-left: -300px; /* Restamos la mitad de la anchura del objeto con un margin-left */
+    z-index: 2;
+    background-color: #fff;
+    border-radius:30px;
+    background: url("../images/hitchhiking.jpg") ;
+    background-size: 100% 100%;
+    box-shadow: 10px 5px 16px #000;
+    transition: background 1.3s;
+}
+
+#titulo{
+    font-family: 'Brush Script MT';
+    font-size: 50px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+#subtitulo{
+    font-family: 'Bradley Hand ITC';
+    font-size: 30px;
+    padding-top: 5px;
+    padding-bottom: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+#leyenda{
+    font-family: 'Century Gothic';
+    text-align: center;
+    padding: 5px;
+}
+
+.textBox{
+    width: 250px;
+    height: 25px;
+    border-radius: 5px; 
+    font-size: 18px;
+}
+
+.emptyTxtBox{
+    width: 250px;
+    height: 25px;
+    border-radius: 5px; 
+    font-size: 18px;
+    background-color: #f4caca;
+}
+
+.botonSubmit{
+    background: linear-gradient(#E3262E, #AB171E);
+    border-color: #AF151B #9A1015 #820A0F;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px; 
+    box-shadow: 2px 2px 0px 0px rgba(0,0,0, 0.3);
+    color: #FFF;
+    height: 40px;
+    width: 150px;  
+    font-family: 'Century Gothic';
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.botonSubmit:hover{
+    background: #E3262E;
+    border-color: #AF151B #9A1015 #820A0F;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px; 
+    box-shadow: 2px 2px 0px 0px rgba(0,0,0, 0.3);
+    color: #FFF;
+    height: 40px;
+    width: 150px;  
+    font-family: 'Century Gothic';
+    font-weight: bold;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.botonSubmit:active{
+    background: linear-gradient(#E3262E, #AB171E);
+    border-color: #AF151B #9A1015 #820A0F;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px; 
+    box-shadow: inset 0px 0px  8px 5px rgba(0, 0, 0, 0.5);
+    color: #FFF;
+    height: 40px;
+    width: 150px;  
+    font-family: 'Century Gothic';
+    font-weight: bold;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+#menu{
+    background: #1A1A1A;
+    line-height: 46px;
+    margin: -16px -10px 0px -10px;
+    width: 98%;
+    color: #E3262E;
+    /*box-shadow: 0px 1px 7px #000;*/
+    height: auto;
+    overflow: hidden; 
+    padding-left: 35px;
+}
+
+#menu a, a:link, a:active, a:visited, a:hover{
+    color: #66757F;
+    font-family: 'Century Gothic';
+    text-decoration: none;
+}
+
+#menu ul li{
+    float: left;
+    list-style: none;
+    padding-right: 5px;
+    padding-left: 5px;
+    transition: background 0.3s;
+}
+
+#menu ul li:hover{
+    background-color: #E3262E;
+    box-shadow: inset 0px -4px 0px 0px rgba(255, 255, 255, 1);
+    cursor: pointer;
+    color: White;
+}
+
+#menu ul li:hover a, a:link{
+    color: White;
+}
+
+.selectedM{    
+    background-color: #E3262E;
+    box-shadow: inset 0px -4px 0px 0px rgba(255, 255, 255, 1);
+    cursor: pointer;
+}
+
+.selectedM a{
+    color: #fff !important; 
+    font-weight: bold;   
+}
+
+#logoMain{
+    position: fixed;
+    top: 3px; 
+    left: 9px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+#sidebar{
+    background: #1A1A1A;
+    width: 280px;
+    height: 100%;
+    top: 47px;
+    left: -280px;
+    padding: 20px 0 10px 0;
+    text-align: center;
+    position: fixed;
+    transition:left 1s;
+    -webkit-transition:left 1s;
+    -moz-transition:left 1s;
+    -o-transition:left 1s;
+    -ms-transition:left 1s;
+    z-index: 10;
+}
+
+#sidebar:hover{
+    left: 0px;
+}
+
+#logoSidebar{
+    color: #fff;
+    font-size: 20px;
+    border: 4px double;
+    border-radius: 50%;
+    display: block;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    line-height: 80px;
+}
+
+#sidebarMenu{
+    margin-top: -20px;
+}
+
+#sidebarMenu ul li{
+    height: 40px;
+    margin-top: 2px;
+    margin-left: -40px;
+    transition: background 1s;
+    list-style: none;
+}
+
+#sidebarMenu ul li a{
+    color: #fff;
+}
+
+#sidebarMenu ul li:hover{
+    background: #E3262E;
+    border-left: 4px solid #fff;
+    font-weight: bolder;
+    font-size: 18px
+}
+
+#map-canvas{
+    height: 93%;
+    width: fit-content;
+    margin: 0px;
+    padding: 0px;
+}
+
+#registrar a, a:link, a:active, a:visited{
+    color: Black;
+}
+
+#registar a:hover{
+    color: #66757F !important;
+}
+
+.popup{
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 85%;
+    height: 85%;
+    background: rgba(51,51,51,0.7);
+    padding: 100px 0px 0px 200px;
+}
+
+.loading{
+    width: 40px;
+    margin-left: 215px;
+    margin-top: 200px;
+}
+
+#horaRuta{
+    margin-bottom: 10px;
+}
+
+#frmFechaHora{
+    background-color: #1A1A1A;
+    font-family: 'Century Gothic';
+    color: White;
+    padding-top: 20px;
+    padding-left: 20px;
+    width: 300px;
+    height: 170px;
+    margin-top: 80px;
+    margin-left: 350px;
+    border-radius: 10px;
+}
