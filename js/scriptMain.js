@@ -1,14 +1,13 @@
 google.maps.event.addDomListener(window, 'load', initialize);
 
-var usuarios, map, permitirMarcado = false, accion="cargarComentarios", noticiasXML;
+var usuarios, map, permitirMarcado = false, accion="cargarComentarios", noticiasXML, salirPopupId;
 var cont = 0;
 var directionsService = new google.maps.DirectionsService();
 var markerOrigen = null;
 var markerDestino = null;
 var directionsDisplay = new google.maps.DirectionsRenderer();
 var usuario_activo = location.search.substring(1, location.search.length);
-var siguiendo = [];
-var comentarios = [];
+var siguiendo = [], seguidores = [], nSiguiendo = [], nSeguidores = [] , comentarios = [];
 
 function initialize() {
 
@@ -77,7 +76,9 @@ function indicarHoraRuta() {
     popup = document.createElement("div");
     popup.setAttribute("class", "popup");
     popup.setAttribute("id", "datosRuta");
+    salirPopupId = "datosRuta";
     window.onkeyup = salirPopUp;
+
     form = document.createElement("form");
     form.setAttribute("id", "frmFechaHora");
     form.setAttribute("action", "javascript:marcar()");
@@ -215,6 +216,8 @@ function cargarComentarios(){
 
     comentarios.sort(sortByDateTime);
     agregarComentarios();
+    cargarSiguiendo();
+    cargarSeguidores();
 }
 
 function agregarComentarios(){
@@ -239,15 +242,134 @@ function agregarComentarios(){
         sidebar.appendChild(li);
         cont_coment++;
     }
-
-
   
 }
   
-    function salirPopUp(e){
-         key = e.keyCode;
-         if (key == 27) { //27 = escape
-             popup = document.getElementById("datosRuta");
-             popup.parentNode.removeChild(popup);
-         }
+function salirPopUp(e){
+    key = e.keyCode;
+    if (key == 27) { //27 = escape
+        var popup = document.getElementById(salirPopupId);
+        popup.parentNode.removeChild(popup);
+    }
+}
+
+function cargarSiguiendo(){
+    var i, j;
+
+    for (i=0; i<siguiendo.length; i++){
+        for (j=0; j<usuarios.length; j++){
+            if(siguiendo[i].textContent == usuarios[j].getAttribute("id")){
+                var nombre = usuarios[j].getElementsByTagName("nombre")[0].textContent;
+                var apellido = usuarios[j].getElementsByTagName("apellido")[0].textContent;
+                nSiguiendo.push(nombre + " " + apellido);
+            }
+        }
+    }
+}
+
+function mostrarSiguiendo(){
+    var popup, frm, titulo, i, sig, leyenda, btn;
+
+    popup = document.createElement("div");
+    popup.setAttribute("class", "popup");
+    popup.setAttribute("id", "popup");
+    salirPopupId = "popup";
+    window.onkeyup = salirPopUp;
+
+    frm = document.createElement("div");
+    frm.setAttribute("id", "frmSiguiendo");
+    frm.setAttribute("class", "frmSigSeg");
+
+    titulo = document.createElement("p");
+    titulo.setAttribute("id","titulo");
+    titulo.innerHTML = "Siguiendo";
+    frm.appendChild(titulo);
+
+    for (i = 0; i < nSiguiendo.length; i++ ){
+        sig = document.createElement("div")
+        sig.innerHTML = nSiguiendo[i];
+        frm.appendChild(sig);
+    }
+
+    leyenda = document.createElement("div");
+    leyenda.setAttribute("id", "leyenda");
+    btn = document.createElement("input");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("class", "botonSubmit");
+    btn.setAttribute("value", "Cerrar");
+    btn.addEventListener("click", function () {
+        var popup = document.getElementById("popup");
+        popup.parentNode.removeChild(popup);
+    }, false);
+    leyenda.appendChild(btn);
+    frm.appendChild(leyenda);
+        
+    popup.appendChild(frm);
+
+    seccion = document.getElementById("map-canvas");
+    seccion.appendChild(popup);
+}
+
+function cargarSeguidores(){
+    var i, j;
+
+    for (i = 0; i < usuarios.length; i++) {
+        user = usuarios[i].getElementsByTagName("user")[0];
+        if (usuario_activo == user.textContent) {
+            seguidores = usuarios[i].getElementsByTagName("seguidores")[0].getElementsByTagName("id");
+        }
+    }
+
+    for (i=0; i<seguidores.length; i++){
+        for (j=0; j<usuarios.length; j++){
+            if(seguidores[i].textContent == usuarios[j].getAttribute("id")){
+                var nombre = usuarios[j].getElementsByTagName("nombre")[0].textContent;
+                var apellido = usuarios[j].getElementsByTagName("apellido")[0].textContent;
+                nSeguidores.push(nombre + " " + apellido);
+            }
+        }
+    }
+}
+
+function mostrarSeguidores(){
+     var popup, frm, titulo, i, sig, leyenda, btn;
+
+    popup = document.createElement("div");
+    popup.setAttribute("class", "popup");
+    popup.setAttribute("id", "popup");
+    salirPopupId = "popup";
+    window.onkeyup = salirPopUp;
+
+    frm = document.createElement("div");
+    frm.setAttribute("id", "frmSeguidores");
+    frm.setAttribute("class", "frmSigSeg");
+
+    titulo = document.createElement("p");
+    titulo.setAttribute("id","titulo");
+    titulo.innerHTML = "Seguidores";
+    frm.appendChild(titulo);
+
+    for (i = 0; i < nSeguidores.length; i++ ){
+        sig = document.createElement("div")
+        sig.innerHTML = nSeguidores[i];
+        frm.appendChild(sig);
+    }
+
+    leyenda = document.createElement("div");
+    leyenda.setAttribute("id", "leyenda");
+    btn = document.createElement("input");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("class", "botonSubmit");
+    btn.setAttribute("value", "Cerrar");
+    btn.addEventListener("click", function () {
+        var popup = document.getElementById("popup");
+        popup.parentNode.removeChild(popup);
+    }, false);
+    leyenda.appendChild(btn);
+    frm.appendChild(leyenda);
+        
+    popup.appendChild(frm);
+
+    seccion = document.getElementById("map-canvas");
+    seccion.appendChild(popup);
 }

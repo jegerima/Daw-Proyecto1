@@ -11,6 +11,11 @@
             <id>0002</id>
             <id>0003</id>
         </siguiendo>
+        <seguidores>
+            <id>0002</id>
+            <id>0003</id>
+        </seguidores>
+
 	</usuario>
 
 	<usuario id="0002">		
@@ -23,6 +28,10 @@
             <id>0001</id>
             <id>0003</id>
         </siguiendo>
+        <seguidores>
+            <id>0001</id>
+            <id>0003</id>
+        </seguidores>
 	</usuario>
 	
     <usuario id="0003">		
@@ -35,6 +44,10 @@
             <id>0001</id>
             <id>0002</id>
         </siguiendo>
+        <seguidores>
+            <id>0001</id>
+            <id>0002</id>
+        </seguidores>
 	</usuario>
 
 </usuarios>
