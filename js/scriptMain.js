@@ -1,9 +1,14 @@
-var map, permitirMarcado = false;
+google.maps.event.addDomListener(window, 'load', initialize);
+
+var usuarios, map, permitirMarcado = false, accion="cargarComentarios", noticiasXML;
 var cont = 0;
 var directionsService = new google.maps.DirectionsService();
 var markerOrigen = null;
 var markerDestino = null;
 var directionsDisplay = new google.maps.DirectionsRenderer();
+var usuario_activo = location.search.substring(1, location.search.length);
+var siguiendo = [];
+var comentarios = [];
 
 function initialize() {
 
@@ -27,6 +32,8 @@ function initialize() {
     var trafficLayer = new google.maps.TrafficLayer();
     trafficLayer.setMap(map);
     directionsDisplay.setMap(map);
+    cargarUsuariosXML();
+    cargarNoticiasXML();
 }
 
 function darclick(evento) {
@@ -123,4 +130,115 @@ function marcar() {
 
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
+function cargarUsuariosXML(){
+    var request = new XMLHttpRequest();
+    request.addEventListener("load", abrirXMLUsuarios, false);
+    request.open("GET", "xml/usuarios.xml", true);
+    request.send(null);
+}
+
+function abrirXMLUsuarios(e){
+    var xml = e.target.responseText;
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xml, "application/xml");
+    usuarios = xmlDoc.documentElement.getElementsByTagName("usuario");
+}
+
+function cargarNoticiasXML(){
+    var request = new XMLHttpRequest();
+    request.addEventListener("load", abrirXMLNoticias, false);
+    request.open("GET", "xml/noticias.xml", true);
+    request.send(null);
+}
+
+function abrirXMLNoticias(e){
+    var xml = e.target.responseText;
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xml, "application/xml");
+    noticiasXML = xmlDoc.documentElement.getElementsByTagName("usuario");
+    if(accion=="cargarComentarios"){
+        cargarComentarios();
+    }
+}
+
+function Comentario(usuario, contenido,fecha,hora){
+    this.usuario = usuario;
+    this.contenido = contenido;
+    this.fecha = fecha;
+    this.hora = hora;
+}
+
+function sortByDateTime(a,b){
+    if(a.fecha < b.fecha){ return 0; } 
+    else if (a.fecha > b.fecha){ return 1; } 
+    else if (a.fecha == b.fecha){
+        if(a.hora < b.hora){ return 0; } 
+        else if (a.hora > b.hora){ return 1; } 
+        else if (a.hora == b.hora){ return 1; }
+    }
+}
+
+function getNameById(id){
+    var i, actual;
+    for (i = 0; i < usuarios.length; i++ ){
+        actual = usuarios[i].getAttribute("id");
+        if(actual==id){
+            return usuarios[i].getElementsByTagName("nombre")[0].textContent + " " + usuarios[i].getElementsByTagName("apellido")[0].textContent
+        }
+    }
+}
+
+function cargarComentarios(){
+    var i, j, k, l, usuarioC, contenido, fecha, hora, coment;    
+
+    for (i=0; i<usuarios.length; i++){
+        user = usuarios[i].getElementsByTagName("user")[0];
+        if(usuario_activo == user.textContent){
+            siguiendo = usuarios[i].getElementsByTagName("siguiendo")[0].getElementsByTagName("id");
+            for (j=0; j<siguiendo.length; j++){
+                for(k=0; k<noticiasXML.length; k++){
+                    if(noticiasXML[k].getAttribute("id")==siguiendo[j].textContent){
+                        //Estoy en noticiasXML de los usuarios que sigo
+                        var listaNoticias = noticiasXML[k].getElementsByTagName("noticia");
+                        for(l=0; l<listaNoticias.length; l++){
+                            usuarioC = getNameById(noticiasXML[k].getAttribute("id"));
+                            contenido = listaNoticias[l].getElementsByTagName("contenido")[0].textContent;
+                            fecha = listaNoticias[l].getElementsByTagName("date")[0].textContent;
+                            hora = listaNoticias[l].getElementsByTagName("time")[0].textContent;
+                            coment = new Comentario(usuarioC, contenido, fecha, hora);
+                            comentarios.push(coment);
+                        }
+                    }
+                }
+            }
+        } 
+    }
+
+    comentarios.sort(sortByDateTime);
+    agregarComentarios();
+}
+
+function agregarComentarios(){
+    var sidebar = document.getElementById("ulSidebar");
+    var i, li, div, nComents = 6; cont=1;
+    var usuarioC, coment, hora, fecha;
+
+    for(i=0; i<nComents; i++){
+        li = document.createElement("li");
+        div = document.createElement("div");
+        div.setAttribute("id", "coment" + cont);
+        div.setAttribute("class", "comentario");
+
+        usuarioC = comentarios[i].usuario;
+        coment = comentarios[i].contenido;
+        hora = comentarios[i].hora;
+        fecha = comentarios[i].fecha;
+
+        div.innerHTML = usuarioC+" dijo: <br>\n"+coment+"<br>\nEl "+fecha+" a las "+hora;
+
+        li.appendChild(div);
+        sidebar.appendChild(li);
+        cont++;
+    }
+
+}

@@ -1,16 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <noticias>
-    <usuario id="cm001">
+    <usuario id="0001">
         <noticia>
-            <dateNoti>
-                Tuesday 5, July 2014
-            </dateNoti>
-            <contenido>
-                Lol XD
-            </contenido>
-
-
+            <date>2014-05-07</date>
+            <time>15:00</time>
+            <contenido>Primer comentario de prueba</contenido>
         </noticia>
-    
+        <noticia>
+            <date>2014-05-08</date>
+            <time>17:50</time>
+            <contenido>Tráfico a la altura del Parcon</contenido>
+        </noticia>
+        <noticia>
+            <date>2014-05-09</date>
+            <time>12:00</time>
+            <contenido>Qué calor!! ¬¬</contenido>
+        </noticia>
+    </usuario>
+
+    <usuario id="0002">
+        <noticia>
+            <date>2014-05-07</date>
+            <time>16:00</time>
+            <contenido>Segundo comentario de prueba</contenido>
+        </noticia>
+        <noticia>
+            <date>2014-05-08</date>
+            <time>18:10</time>
+            <contenido>No se por qué hay tráfico a esta hora? -_-</contenido>
+        </noticia>
+        <noticia>
+            <date>2014-05-09</date>
+            <time>10:00</time>
+            <contenido>Ausencia de buses en la garita</contenido>
+        </noticia>
+    </usuario>
+
+    <usuario id="0003">
+        <noticia>
+            <date>2014-05-07</date>
+            <time>17:00</time>
+            <contenido>Tercer comentario de prueba</contenido>
+        </noticia>
+        <noticia>
+            <date>2014-05-08</date>
+            <time>12:50</time>
+            <contenido>En el Gordo's</contenido>
+        </noticia>
+        <noticia>
+            <date>2014-05-09</date>
+            <time>12:00</time>
+            <contenido>Otra vez en el Gordo's. Mi favorito!</contenido>
+        </noticia>
+    </usuario>
 
 </noticias>

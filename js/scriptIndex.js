@@ -1,6 +1,6 @@
 window.addEventListener("load", inicializar, false);
 
-var usuario, contrasena, usuarios, accion,loading;
+var usuario, contrasena, usuarios, accion, loading, activado;
 
 function inicializar() {
         txtUser.onkeyup = validarEnter;
@@ -51,6 +51,7 @@ function validarCuenta(){
         pass = usuarios[i].getElementsByTagName("password")[0];
         if(usuario.value == user.textContent){
             if(contrasena.value == pass.textContent) {
+                activado = usuario.value;
                 existe = true;
                 break;
             } else {
@@ -62,7 +63,7 @@ function validarCuenta(){
     }
 
     if(existe){
-        window.open("main.html","_self");
+        window.open("main.html?"+activado,"_self");
     } else {
         if (loading) quitarLoading();
         alert("Nombre de usuario y/o contraseña incorrecto");
@@ -73,7 +74,7 @@ function validarCuenta(){
 }
 
 function crearFrmRegistro(){
-    var registro, titulo, leyenda, form, nameBox, lnameBox, userBox, passBox, btn;
+    var registro, titulo, leyenda, form, userBox, passBox, carro, nocarro, btn;
 
     document.getElementById("login").style.display = "none";
 
@@ -98,35 +99,13 @@ function crearFrmRegistro(){
 
     leyenda = document.createElement("div");
     leyenda.setAttribute("id", "leyenda");
-    nameBox = document.createElement("input");
-    nameBox.setAttribute("id", "nameBox");
-    nameBox.setAttribute("type", "text");
-    nameBox.setAttribute("required","required");
-    nameBox.setAttribute("class","textBox");
-    nameBox.setAttribute("placeholder","Nombre");
-    nameBox.setAttribute("autofocus","true");
-    leyenda.appendChild(nameBox);
-    form.appendChild(leyenda);
-
-    leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
-    lnameBox = document.createElement("input");
-    lnameBox.setAttribute("id", "lnameBox");
-    lnameBox.setAttribute("type", "text");
-    lnameBox.setAttribute("required","required");
-    lnameBox.setAttribute("class","textBox");
-    lnameBox.setAttribute("placeholder","Apellido");
-    leyenda.appendChild(lnameBox);
-    form.appendChild(leyenda);
-
-    leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
     userBox = document.createElement("input");
     userBox.setAttribute("id", "userBox");
     userBox.setAttribute("type", "text");
     userBox.setAttribute("required","required");
     userBox.setAttribute("class","textBox");
     userBox.setAttribute("placeholder","Usuario");
+    userBox.setAttribute("autofocus","true");
     leyenda.appendChild(userBox);
     form.appendChild(leyenda);
 
@@ -154,12 +133,39 @@ function crearFrmRegistro(){
 
     leyenda = document.createElement("div");
     leyenda.setAttribute("id", "leyenda");
+    carro = document.createElement("input");
+    carro.setAttribute("type", "radio");
+    carro.setAttribute("id", "carro");
+    carro.setAttribute("value", "carro");
+    carro.setAttribute("checked", "checked");
+    var label = document.createElement("label");
+    label.setAttribute("id", "carro");
+    label.innerHTML = "Tengo carro";
+    leyenda.appendChild(carro);
+    leyenda.appendChild(label);
+    form.appendChild(leyenda);
+
+    leyenda = document.createElement("div");
+    leyenda.setAttribute("id", "leyenda");
+    nocarro = document.createElement("input");
+    nocarro.setAttribute("type", "radio");
+    nocarro.setAttribute("id", "noCarro");
+    nocarro.setAttribute("value", "noCarro");
+    var label = document.createElement("label");
+    label.setAttribute("id", "noCarro");
+    label.innerHTML = "No tengo carro";
+    leyenda.appendChild(nocarro);
+    leyenda.appendChild(label);
+    form.appendChild(leyenda);
+
+    leyenda = document.createElement("div");
+    leyenda.setAttribute("id", "leyenda");
     btn = document.createElement("input");
     btn.setAttribute("type", "submit");
     btn.setAttribute("class","botonSubmit");
     btn.setAttribute("value","Registrar");
-    btn.addEventListener("click", mostrarLoading, false);
-    btn.addEventListener("click", function () {accion="registrar"; }, false);
+    //btn.addEventListener("click", mostrarLoading, false);
+    //btn.addEventListener("click", function () {accion="registrar"; }, false);
     leyenda.appendChild(btn);
     form.appendChild(leyenda);
 
@@ -185,21 +191,6 @@ function cambiarFrms(){
     registro.parentNode.removeChild(registro);
 }
 
-//Función extraída de W3Schools
-//Fuente: http://www.w3schools.com/dom/dom_loadxmldoc.asp
-function loadXMLDoc(filename){
-    if (window.XMLHttpRequest){
-        xhttp=new XMLHttpRequest();
-    } else {
-        // code for IE5 and IE6 
-        xhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xhttp.open("GET",filename,false);
-    xhttp.send();
-    return xhttp.responseXML;
-}
-
-
 function guardarCuenta(){
     var nombreNew, apellidoNew, userNew, passNew, cpassNew, xmlDoc, usuario;
     
@@ -219,8 +210,6 @@ function guardarCuenta(){
 
     var x = xmlDoc.getElementsByTagName("usuarios")[0];
     x.appendChild(usuario);
-
-
 }
 
 function mostrarLoading(){

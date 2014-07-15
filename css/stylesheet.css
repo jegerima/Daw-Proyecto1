@@ -1,6 +1,7 @@
 html{
     height: 100%;
 }
+
 body {
     height: 100%;
     margin: 0;
@@ -234,8 +235,9 @@ body {
 }
 
 #sidebarMenu ul li{
-    height: 40px;
-    margin-top: 2px;
+    height: auto;
+    margin-top: 5px;    
+    margin-bottom: 5px;    
     margin-left: -40px;
     transition: background 1s;
     list-style: none;
@@ -248,6 +250,7 @@ body {
 #sidebarMenu ul li:hover{
     background: #E3262E;
     border-left: 4px solid #fff;
+    border-right: 4px solid #fff;
     font-weight: bolder;
     font-size: 18px
 }
@@ -299,4 +302,10 @@ body {
     margin-top: 80px;
     margin-left: 350px;
     border-radius: 10px;
+}
+
+.comentario{
+    background: White;
+    text-align: justify;
+    font-family: 'Century Gothic';
 }
