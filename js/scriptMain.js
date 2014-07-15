@@ -76,7 +76,7 @@ function indicarHoraRuta() {
     popup = document.createElement("div");
     popup.setAttribute("class", "popup");
     popup.setAttribute("id", "datosRuta");
-
+    window.onkeyup = salirPopUp;
     form = document.createElement("form");
     form.setAttribute("id", "frmFechaHora");
     form.setAttribute("action", "#");
@@ -241,4 +241,14 @@ function agregarComentarios(){
         cont++;
     }
 
+
+  
+}
+  
+    function salirPopUp(e){
+         key = e.keyCode;
+         if (key == 27) { //27 = escape
+             popup = document.getElementById("datosRuta");
+             popup.parentNode.removeChild(popup);
+         }
 }
