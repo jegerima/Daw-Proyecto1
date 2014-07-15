@@ -1,9 +1,13 @@
-var map, permitirMarcado = false;
+google.maps.event.addDomListener(window, 'load', initialize);
+
+var usuarios, map, permitirMarcado = false, accion="cargarComentarios", noticiasXML, salirPopupId;
 var cont = 0;
 var directionsService = new google.maps.DirectionsService();
 var markerOrigen = null;
 var markerDestino = null;
 var directionsDisplay = new google.maps.DirectionsRenderer();
+var usuario_activo = location.search.substring(1, location.search.length);
+var siguiendo = [], seguidores = [], nSiguiendo = [], nSeguidores = [] , comentarios = [];
 
 function initialize() {
 
@@ -27,6 +31,8 @@ function initialize() {
     var trafficLayer = new google.maps.TrafficLayer();
     trafficLayer.setMap(map);
     directionsDisplay.setMap(map);
+    cargarUsuariosXML();
+    cargarNoticiasXML();
 }
 
 function darclick(evento) {
@@ -38,6 +44,7 @@ function darclick(evento) {
             title: "Origen"
         });
         cont = 1;
+        return;
 
     } else {
         var myLatlngDestino = evento.latLng;
@@ -69,10 +76,12 @@ function indicarHoraRuta() {
     popup = document.createElement("div");
     popup.setAttribute("class", "popup");
     popup.setAttribute("id", "datosRuta");
+    salirPopupId = "datosRuta";
+    window.onkeyup = salirPopUp;
 
     form = document.createElement("form");
     form.setAttribute("id", "frmFechaHora");
-    form.setAttribute("action", "#");
+    form.setAttribute("action", "javascript:marcar()");
 
     leyenda = document.createElement("div");
     leyenda.innerHTML = "Fecha de inicio del recorrido: ";
@@ -96,7 +105,6 @@ function indicarHoraRuta() {
     btn.setAttribute("type", "submit");
     btn.setAttribute("class", "botonSubmit");
     btn.setAttribute("value", "Aceptar");
-    btn.addEventListener("click", marcar, false);
     leyenda.appendChild(btn);
     form.appendChild(leyenda);
 
@@ -107,8 +115,8 @@ function indicarHoraRuta() {
 }
 
 function marcar() {
-    fecha = document.getElementById("fechaRuta").value;
-    hora = document.getElementById("horaRuta").value;
+    var fecha = document.getElementById("fechaRuta").value;
+    var hora = document.getElementById("horaRuta").value;
     if (fecha == "" || hora == "") {
         return;
     }
@@ -120,7 +128,248 @@ function marcar() {
     popup.parentNode.removeChild(popup);
 
     google.maps.event.addListener(map, "click", darclick);
-
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
+function cargarUsuariosXML(){
+    var request = new XMLHttpRequest();
+    request.addEventListener("load", abrirXMLUsuarios, false);
+    request.open("GET", "xml/usuarios.xml", true);
+    request.send(null);
+}
+
+function abrirXMLUsuarios(e){
+    var xml = e.target.responseText;
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xml, "application/xml");
+    usuarios = xmlDoc.documentElement.getElementsByTagName("usuario");
+}
+
+function cargarNoticiasXML(){
+    var request = new XMLHttpRequest();
+    request.addEventListener("load", abrirXMLNoticias, false);
+    request.open("GET", "xml/noticias.xml", true);
+    request.send(null);
+}
+
+function abrirXMLNoticias(e){
+    var xml = e.target.responseText;
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xml, "application/xml");
+    noticiasXML = xmlDoc.documentElement.getElementsByTagName("usuario");
+    if(accion=="cargarComentarios"){
+        cargarComentarios();
+    }
+}
+
+function Comentario(usuario, contenido,fecha,hora){
+    this.usuario = usuario;
+    this.contenido = contenido;
+    this.fecha = fecha;
+    this.hora = hora;
+}
+
+function sortByDateTime(a,b){
+    if(a.fecha < b.fecha){ return 0; } 
+    else if (a.fecha > b.fecha){ return 1; } 
+    else if (a.fecha == b.fecha){
+        if(a.hora < b.hora){ return 0; } 
+        else if (a.hora > b.hora){ return 1; } 
+        else if (a.hora == b.hora){ return 1; }
+    }
+}
+
+function getNameById(id){
+    var i, actual;
+    for (i = 0; i < usuarios.length; i++ ){
+        actual = usuarios[i].getAttribute("id");
+        if(actual==id){
+            return usuarios[i].getElementsByTagName("nombre")[0].textContent + " " + usuarios[i].getElementsByTagName("apellido")[0].textContent
+        }
+    }
+}
+
+function cargarComentarios(){
+    var i, j, k, l, usuarioC, contenido, fecha, hora, coment;    
+
+    for (i=0; i<usuarios.length; i++){
+        user = usuarios[i].getElementsByTagName("user")[0];
+        if(usuario_activo == user.textContent){
+            siguiendo = usuarios[i].getElementsByTagName("siguiendo")[0].getElementsByTagName("id");
+            for (j=0; j<siguiendo.length; j++){
+                for(k=0; k<noticiasXML.length; k++){
+                    if(noticiasXML[k].getAttribute("id")==siguiendo[j].textContent){
+                        //Estoy en noticiasXML de los usuarios que sigo
+                        var listaNoticias = noticiasXML[k].getElementsByTagName("noticia");
+                        for(l=0; l<listaNoticias.length; l++){
+                            usuarioC = getNameById(noticiasXML[k].getAttribute("id"));
+                            contenido = listaNoticias[l].getElementsByTagName("contenido")[0].textContent;
+                            fecha = listaNoticias[l].getElementsByTagName("date")[0].textContent;
+                            hora = listaNoticias[l].getElementsByTagName("time")[0].textContent;
+                            coment = new Comentario(usuarioC, contenido, fecha, hora);
+                            comentarios.push(coment);
+                        }
+                    }
+                }
+            }
+        } 
+    }
+
+    comentarios.sort(sortByDateTime);
+    agregarComentarios();
+    cargarSiguiendo();
+    cargarSeguidores();
+}
+
+function agregarComentarios(){
+    var sidebar = document.getElementById("ulSidebar");
+    var i, li, div, nComents = 6; cont_coment=1;
+    var usuarioC, coment, hora, fecha;
+
+    for(i=0; i<nComents; i++){
+        li = document.createElement("li");
+        div = document.createElement("div");
+        div.setAttribute("id", "coment" + cont_coment);
+        div.setAttribute("class", "comentario");
+
+        usuarioC = comentarios[i].usuario;
+        coment = comentarios[i].contenido;
+        hora = comentarios[i].hora;
+        fecha = comentarios[i].fecha;
+
+        div.innerHTML = usuarioC+" dijo: <br>\n"+coment+"<br>\nEl "+fecha+" a las "+hora;
+
+        li.appendChild(div);
+        sidebar.appendChild(li);
+        cont_coment++;
+    }
+  
+}
+  
+function salirPopUp(e){
+    key = e.keyCode;
+    if (key == 27) { //27 = escape
+        var popup = document.getElementById(salirPopupId);
+        popup.parentNode.removeChild(popup);
+    }
+}
+
+function cargarSiguiendo(){
+    var i, j;
+
+    for (i=0; i<siguiendo.length; i++){
+        for (j=0; j<usuarios.length; j++){
+            if(siguiendo[i].textContent == usuarios[j].getAttribute("id")){
+                var nombre = usuarios[j].getElementsByTagName("nombre")[0].textContent;
+                var apellido = usuarios[j].getElementsByTagName("apellido")[0].textContent;
+                nSiguiendo.push(nombre + " " + apellido);
+            }
+        }
+    }
+}
+
+function mostrarSiguiendo(){
+    var popup, frm, titulo, i, sig, leyenda, btn;
+
+    popup = document.createElement("div");
+    popup.setAttribute("class", "popup");
+    popup.setAttribute("id", "popup");
+    salirPopupId = "popup";
+    window.onkeyup = salirPopUp;
+
+    frm = document.createElement("div");
+    frm.setAttribute("id", "frmSiguiendo");
+    frm.setAttribute("class", "frmSigSeg");
+
+    titulo = document.createElement("p");
+    titulo.setAttribute("id","titulo");
+    titulo.innerHTML = "Siguiendo";
+    frm.appendChild(titulo);
+
+    for (i = 0; i < nSiguiendo.length; i++ ){
+        sig = document.createElement("div")
+        sig.innerHTML = nSiguiendo[i];
+        frm.appendChild(sig);
+    }
+
+    leyenda = document.createElement("div");
+    leyenda.setAttribute("id", "leyenda");
+    btn = document.createElement("input");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("class", "botonSubmit");
+    btn.setAttribute("value", "Cerrar");
+    btn.addEventListener("click", function () {
+        var popup = document.getElementById("popup");
+        popup.parentNode.removeChild(popup);
+    }, false);
+    leyenda.appendChild(btn);
+    frm.appendChild(leyenda);
+        
+    popup.appendChild(frm);
+
+    seccion = document.getElementById("map-canvas");
+    seccion.appendChild(popup);
+}
+
+function cargarSeguidores(){
+    var i, j;
+
+    for (i = 0; i < usuarios.length; i++) {
+        user = usuarios[i].getElementsByTagName("user")[0];
+        if (usuario_activo == user.textContent) {
+            seguidores = usuarios[i].getElementsByTagName("seguidores")[0].getElementsByTagName("id");
+        }
+    }
+
+    for (i=0; i<seguidores.length; i++){
+        for (j=0; j<usuarios.length; j++){
+            if(seguidores[i].textContent == usuarios[j].getAttribute("id")){
+                var nombre = usuarios[j].getElementsByTagName("nombre")[0].textContent;
+                var apellido = usuarios[j].getElementsByTagName("apellido")[0].textContent;
+                nSeguidores.push(nombre + " " + apellido);
+            }
+        }
+    }
+}
+
+function mostrarSeguidores(){
+     var popup, frm, titulo, i, sig, leyenda, btn;
+
+    popup = document.createElement("div");
+    popup.setAttribute("class", "popup");
+    popup.setAttribute("id", "popup");
+    salirPopupId = "popup";
+    window.onkeyup = salirPopUp;
+
+    frm = document.createElement("div");
+    frm.setAttribute("id", "frmSeguidores");
+    frm.setAttribute("class", "frmSigSeg");
+
+    titulo = document.createElement("p");
+    titulo.setAttribute("id","titulo");
+    titulo.innerHTML = "Seguidores";
+    frm.appendChild(titulo);
+
+    for (i = 0; i < nSeguidores.length; i++ ){
+        sig = document.createElement("div")
+        sig.innerHTML = nSeguidores[i];
+        frm.appendChild(sig);
+    }
+
+    leyenda = document.createElement("div");
+    leyenda.setAttribute("id", "leyenda");
+    btn = document.createElement("input");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("class", "botonSubmit");
+    btn.setAttribute("value", "Cerrar");
+    btn.addEventListener("click", function () {
+        var popup = document.getElementById("popup");
+        popup.parentNode.removeChild(popup);
+    }, false);
+    leyenda.appendChild(btn);
+    frm.appendChild(leyenda);
+        
+    popup.appendChild(frm);
+
+    seccion = document.getElementById("map-canvas");
+    seccion.appendChild(popup);
+}

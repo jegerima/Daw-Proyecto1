@@ -1,27 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <usuarios>
-	<usuario>
-		<id>cm001</id>
+	
+    <usuario id="0001">
 		<user>chagemed</user>
 		<password>medina</password>
 		<nombre>Charlie</nombre>
 		<apellido>Medina</apellido>
 		<carro>1</carro>
+        <siguiendo>
+            <id>0002</id>
+            <id>0003</id>
+        </siguiendo>
+        <seguidores>
+            <id>0002</id>
+            <id>0003</id>
+        </seguidores>
+
 	</usuario>
-	<usuario>
-		<id>jr002</id>	
+
+	<usuario id="0002">		
 		<user>jegerima</user>
 		<password>rivera</password>
 		<nombre>Jefferson</nombre>
 		<apellido>Rivera</apellido>
 		<carro>1</carro>
+        <siguiendo>
+            <id>0001</id>
+            <id>0003</id>
+        </siguiendo>
+        <seguidores>
+            <id>0001</id>
+            <id>0003</id>
+        </seguidores>
 	</usuario>
-	<usuario>
-		<id>lt003</id>
+	
+    <usuario id="0003">		
 		<user>ltamayo</user>
 		<password>tamayo</password>
 		<nombre>Leonardo</nombre>
 		<apellido>Tamayo</apellido>
 		<carro>1</carro>
+        <siguiendo>
+            <id>0001</id>
+            <id>0002</id>
+        </siguiendo>
+        <seguidores>
+            <id>0001</id>
+            <id>0002</id>
+        </seguidores>
 	</usuario>
+
 </usuarios>
