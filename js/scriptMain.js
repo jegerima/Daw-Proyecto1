@@ -45,6 +45,7 @@ function darclick(evento) {
             title: "Origen"
         });
         cont = 1;
+        return;
 
     } else {
         var myLatlngDestino = evento.latLng;
@@ -79,7 +80,7 @@ function indicarHoraRuta() {
     window.onkeyup = salirPopUp;
     form = document.createElement("form");
     form.setAttribute("id", "frmFechaHora");
-    form.setAttribute("action", "#");
+    form.setAttribute("action", "javascript:marcar()");
 
     leyenda = document.createElement("div");
     leyenda.innerHTML = "Fecha de inicio del recorrido: ";
@@ -103,7 +104,6 @@ function indicarHoraRuta() {
     btn.setAttribute("type", "submit");
     btn.setAttribute("class", "botonSubmit");
     btn.setAttribute("value", "Aceptar");
-    btn.addEventListener("click", marcar, false);
     leyenda.appendChild(btn);
     form.appendChild(leyenda);
 
@@ -114,8 +114,8 @@ function indicarHoraRuta() {
 }
 
 function marcar() {
-    fecha = document.getElementById("fechaRuta").value;
-    hora = document.getElementById("horaRuta").value;
+    var fecha = document.getElementById("fechaRuta").value;
+    var hora = document.getElementById("horaRuta").value;
     if (fecha == "" || hora == "") {
         return;
     }
@@ -127,7 +127,6 @@ function marcar() {
     popup.parentNode.removeChild(popup);
 
     google.maps.event.addListener(map, "click", darclick);
-
 }
 
 function cargarUsuariosXML(){
@@ -220,13 +219,13 @@ function cargarComentarios(){
 
 function agregarComentarios(){
     var sidebar = document.getElementById("ulSidebar");
-    var i, li, div, nComents = 6; cont=1;
+    var i, li, div, nComents = 6; cont_coment=1;
     var usuarioC, coment, hora, fecha;
 
     for(i=0; i<nComents; i++){
         li = document.createElement("li");
         div = document.createElement("div");
-        div.setAttribute("id", "coment" + cont);
+        div.setAttribute("id", "coment" + cont_coment);
         div.setAttribute("class", "comentario");
 
         usuarioC = comentarios[i].usuario;
@@ -238,7 +237,7 @@ function agregarComentarios(){
 
         li.appendChild(div);
         sidebar.appendChild(li);
-        cont++;
+        cont_coment++;
     }
 
 
