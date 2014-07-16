@@ -1,14 +1,24 @@
 window.addEventListener("load", inicializar);
 
-var usuarios, map, permitirMarcado = false, accion = "cargarComentarios", noticiasXML, salirPopupId;
+var usuarios, map, permitirMarcado = false,
+    accion = "cargarComentarios",
+    noticiasXML, salirPopupId;
 var cont = 0;
 var directionsService = new google.maps.DirectionsService();
 var markerOrigen = null;
 var markerDestino = null;
-var directionsDisplay = new google.maps.DirectionsRenderer();
+var directionsDisplay = new google.maps.DirectionsRenderer({
+    suppressMarkers: false,
+    suppressInfoWindows: true
+});
 var usuario_activo = location.search.substring(1, location.search.length);
-var siguiendo = [], seguidores = [], nSiguiendo = [], nSeguidores = [] , comentarios = [];
+var siguiendo = [],
+    seguidores = [],
+    nSiguiendo = [],
+    nSeguidores = [],
+    comentarios = [];
 var ResponsiveON = false;
+var latlngbounds = new google.maps.LatLngBounds();
 
 function inicializar() {
     initialize();
@@ -23,18 +33,15 @@ function inicializar() {
     RespMenu.addEventListener("click", ResponsiveMenu, false);
 }
 
-function ResponsiveMenu(){
+function ResponsiveMenu() {
     var men = document.getElementById("menuul");
-     if(!ResponsiveON)
-     {
-         men.setAttribute("class","RespON");
-         ResponsiveON = true;
-     }
-     else
-     {
-         men.setAttribute("class","RespOFF");
-         ResponsiveON = false;     
-     }
+    if (!ResponsiveON) {
+        men.setAttribute("class", "RespON");
+        ResponsiveON = true;
+    } else {
+        men.setAttribute("class", "RespOFF");
+        ResponsiveON = false;
+    }
 }
 
 function initialize() {
@@ -280,23 +287,8 @@ function agregarComentarios() {
         cont_coment++;
     }
 
-    agregarBtnSalir();
-}
 
-function agregarBtnSalir(){
-    var sidebar = document.getElementById("ulSidebar");
 
-    var div = document.createElement("div");
-    div.setAttribute("id", "divBtnSalir");
-    var btnSalir = document.createElement("input");
-    btnSalir.setAttribute("type", "button");
-    btnSalir.setAttribute("class", "botonSubmit");
-    btnSalir.setAttribute("value", "Cerrar Sesión");
-    btnSalir.addEventListener("click", function () {
-        window.open("index.html","_self");
-    }, false);
-    div.appendChild(btnSalir);
-    sidebar.appendChild(div);
 }
 
 function salirPopUp(e) {
@@ -307,12 +299,12 @@ function salirPopUp(e) {
     }
 }
 
-function cargarSiguiendo(){
+function cargarSiguiendo() {
     var i, j;
 
-    for (i=0; i<siguiendo.length; i++){
-        for (j=0; j<usuarios.length; j++){
-            if(siguiendo[i].textContent == usuarios[j].getAttribute("id")){
+    for (i = 0; i < siguiendo.length; i++) {
+        for (j = 0; j < usuarios.length; j++) {
+            if (siguiendo[i].textContent == usuarios[j].getAttribute("id")) {
                 var nombre = usuarios[j].getElementsByTagName("nombre")[0].textContent;
                 var apellido = usuarios[j].getElementsByTagName("apellido")[0].textContent;
                 nSiguiendo.push(nombre + " " + apellido);
@@ -321,7 +313,7 @@ function cargarSiguiendo(){
     }
 }
 
-function mostrarSiguiendo(){
+function mostrarSiguiendo() {
     var popup, frm, titulo, i, sig, leyenda, btn;
 
     popup = document.createElement("div");
@@ -335,11 +327,11 @@ function mostrarSiguiendo(){
     frm.setAttribute("class", "frmSigSeg");
 
     titulo = document.createElement("p");
-    titulo.setAttribute("id","titulo");
+    titulo.setAttribute("id", "titulo");
     titulo.innerHTML = "Siguiendo";
     frm.appendChild(titulo);
 
-    for (i = 0; i < nSiguiendo.length; i++ ){
+    for (i = 0; i < nSiguiendo.length; i++) {
         sig = document.createElement("div")
         sig.innerHTML = nSiguiendo[i];
         frm.appendChild(sig);
@@ -357,14 +349,14 @@ function mostrarSiguiendo(){
     }, false);
     leyenda.appendChild(btn);
     frm.appendChild(leyenda);
-        
+
     popup.appendChild(frm);
 
     seccion = document.getElementById("map-canvas");
     seccion.appendChild(popup);
 }
 
-function cargarSeguidores(){
+function cargarSeguidores() {
     var i, j;
 
     for (i = 0; i < usuarios.length; i++) {
@@ -374,9 +366,9 @@ function cargarSeguidores(){
         }
     }
 
-    for (i=0; i<seguidores.length; i++){
-        for (j=0; j<usuarios.length; j++){
-            if(seguidores[i].textContent == usuarios[j].getAttribute("id")){
+    for (i = 0; i < seguidores.length; i++) {
+        for (j = 0; j < usuarios.length; j++) {
+            if (seguidores[i].textContent == usuarios[j].getAttribute("id")) {
                 var nombre = usuarios[j].getElementsByTagName("nombre")[0].textContent;
                 var apellido = usuarios[j].getElementsByTagName("apellido")[0].textContent;
                 nSeguidores.push(nombre + " " + apellido);
@@ -385,8 +377,8 @@ function cargarSeguidores(){
     }
 }
 
-function mostrarSeguidores(){
-     var popup, frm, titulo, i, sig, leyenda, btn;
+function mostrarSeguidores() {
+    var popup, frm, titulo, i, sig, leyenda, btn;
 
     popup = document.createElement("div");
     popup.setAttribute("class", "popup");
@@ -399,11 +391,11 @@ function mostrarSeguidores(){
     frm.setAttribute("class", "frmSigSeg");
 
     titulo = document.createElement("p");
-    titulo.setAttribute("id","titulo");
+    titulo.setAttribute("id", "titulo");
     titulo.innerHTML = "Seguidores";
     frm.appendChild(titulo);
 
-    for (i = 0; i < nSeguidores.length; i++ ){
+    for (i = 0; i < nSeguidores.length; i++) {
         sig = document.createElement("div")
         sig.innerHTML = nSeguidores[i];
         frm.appendChild(sig);
@@ -421,19 +413,19 @@ function mostrarSeguidores(){
     }, false);
     leyenda.appendChild(btn);
     frm.appendChild(leyenda);
-        
+
     popup.appendChild(frm);
 
     seccion = document.getElementById("map-canvas");
     seccion.appendChild(popup);
 }
 
-function buscarPerfil(){
-    window.open("perfil.html?"+usuario_activo,"_self");
+function buscarPerfil() {
+    window.open("perfil.html?" + usuario_activo, "_self");
 }
 
-function mostrarInicio(){
-    window.open("main.html?"+usuario_activo,"_self");
+function mostrarInicio() {
+    window.open("main.html?" + usuario_activo, "_self");
 }
 
 function cargarRutas() {
@@ -457,26 +449,22 @@ function cargarRutas() {
 }
 
 function dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino) {
+
+    var directionsDisplay2 = new google.maps.DirectionsRenderer({
+        suppressMarkers: false,
+        suppressInfoWindows: true
+    });
+    directionsDisplay2.setMap(map);
     origen = new google.maps.LatLng(lat_origen, lon_origen);
     destino = new google.maps.LatLng(lat_destino, lon_destino);
-    var latlngbounds = new google.maps.LatLngBounds();
 
-    marcador_origen = new google.maps.Marker({
-        position: origen,
-        map: map,
-        title: "Origen"
-    });
 
-    var marcador_destino = new google.maps.Marker({
-        position: destino,
-        map: map,
-        title: "Destino"
-    });
+
     //marcador_origen = new google.maps.LatLng(40.674389,-4.700432);
 
     var request = {
-        origin: marcador_origen.getPosition(),
-        destination: marcador_destino.getPosition(),
+        origin: origen,
+        destination: destino,
         travelMode: google.maps.TravelMode.DRIVING
     };
     latlngbounds.extend(origen);
@@ -486,11 +474,11 @@ function dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino) {
 
     directionsService.route(request, function (response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
+            directionsDisplay2.setDirections(response);
 
-        //    map.setCenter(latlngbounds.getCenter());
-          //  map.fitBounds(latlngbounds);
-           // setTimeout(initialize, 1);
+            map.setCenter(latlngbounds.getCenter());
+            map.fitBounds(latlngbounds);
+            // setTimeout(initialize, 1);
 
         } else {
             alert("Ruta Imposible, marque una ruta posible");
