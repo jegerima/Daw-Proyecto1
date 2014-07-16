@@ -1,19 +1,35 @@
-google.maps.event.addDomListener(window, 'load', initialize);
+window.addEventListener("load", inicializar);
 
-var usuarios, map, permitirMarcado = false, accion="cargarComentarios", noticiasXML, salirPopupId;
+
+
+var usuarios, map, permitirMarcado = false,
+    accion = "cargarComentarios",
+    noticiasXML;
 var cont = 0;
 var directionsService = new google.maps.DirectionsService();
 var markerOrigen = null;
 var markerDestino = null;
 var directionsDisplay = new google.maps.DirectionsRenderer();
 var usuario_activo = location.search.substring(1, location.search.length);
-var siguiendo = [], seguidores = [], nSiguiendo = [], nSeguidores = [] , comentarios = [];
-var ResponsiveON = false;
+var siguiendo = [];
+var comentarios = [];
+
+
+function inicializar() {
+    initialize();
+    cargarUsuariosXML();
+    cargarNoticiasXML();
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+
+        cargarRutas();
+
+    });
+}
 
 function initialize() {
 
     var mapOptions = {
-        zoom: 15
+        zoom: 8
     };
 
     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
@@ -32,27 +48,8 @@ function initialize() {
     var trafficLayer = new google.maps.TrafficLayer();
     trafficLayer.setMap(map);
     directionsDisplay.setMap(map);
-    cargarUsuariosXML();
-    cargarNoticiasXML();
 
-    var RespMenu = document.getElementById("pull");
-    RespMenu.addEventListener("click", ResponsiveMenu, false);
-}
 
-function ResponsiveMenu()
-{
-    var men = document.getElementById("menuul");
-     if(!ResponsiveON)
-     {
-         men.setAttribute("class","RespON");
-         ResponsiveON = true;
-     }
-     else
-     {
-         men.setAttribute("class","RespOFF");
-         ResponsiveON = false;
-        
-     }
 }
 
 function darclick(evento) {
@@ -73,7 +70,9 @@ function darclick(evento) {
             map: map,
             title: "Destino"
         });
+        alert("Origen: " + markerOrigen.getPosition() + " DEstino :" + markerDestino.getPosition());
         var request = {
+
             origin: markerOrigen.getPosition(),
             destination: markerDestino.getPosition(),
             travelMode: google.maps.TravelMode.DRIVING
@@ -91,14 +90,13 @@ function darclick(evento) {
 }
 
 function indicarHoraRuta() {
+
     var popup, form, leyenda, fecha, hora, btn;
 
     popup = document.createElement("div");
     popup.setAttribute("class", "popup");
     popup.setAttribute("id", "datosRuta");
-    salirPopupId = "datosRuta";
     window.onkeyup = salirPopUp;
-
     form = document.createElement("form");
     form.setAttribute("id", "frmFechaHora");
     form.setAttribute("action", "javascript:marcar()");
@@ -150,77 +148,86 @@ function marcar() {
     google.maps.event.addListener(map, "click", darclick);
 }
 
-function cargarUsuariosXML(){
+function cargarUsuariosXML() {
     var request = new XMLHttpRequest();
     request.addEventListener("load", abrirXMLUsuarios, false);
     request.open("GET", "xml/usuarios.xml", true);
     request.send(null);
 }
 
-function abrirXMLUsuarios(e){
+function abrirXMLUsuarios(e) {
     var xml = e.target.responseText;
     var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(xml, "application/xml");
     usuarios = xmlDoc.documentElement.getElementsByTagName("usuario");
+
+
 }
 
-function cargarNoticiasXML(){
+function cargarNoticiasXML() {
     var request = new XMLHttpRequest();
     request.addEventListener("load", abrirXMLNoticias, false);
     request.open("GET", "xml/noticias.xml", true);
     request.send(null);
 }
 
-function abrirXMLNoticias(e){
+function abrirXMLNoticias(e) {
     var xml = e.target.responseText;
     var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(xml, "application/xml");
     noticiasXML = xmlDoc.documentElement.getElementsByTagName("usuario");
-    if(accion=="cargarComentarios"){
+    if (accion == "cargarComentarios") {
         cargarComentarios();
+
     }
 }
 
-function Comentario(usuario, contenido,fecha,hora){
+function Comentario(usuario, contenido, fecha, hora) {
     this.usuario = usuario;
     this.contenido = contenido;
     this.fecha = fecha;
     this.hora = hora;
 }
 
-function sortByDateTime(a,b){
-    if(a.fecha < b.fecha){ return 0; } 
-    else if (a.fecha > b.fecha){ return 1; } 
-    else if (a.fecha == b.fecha){
-        if(a.hora < b.hora){ return 0; } 
-        else if (a.hora > b.hora){ return 1; } 
-        else if (a.hora == b.hora){ return 1; }
+function sortByDateTime(a, b) {
+    if (a.fecha < b.fecha) {
+        return 0;
+    } else if (a.fecha > b.fecha) {
+        return 1;
+    } else if (a.fecha == b.fecha) {
+        if (a.hora < b.hora) {
+            return 0;
+        } else if (a.hora > b.hora) {
+            return 1;
+        } else if (a.hora == b.hora) {
+            return 1;
+        }
     }
 }
 
-function getNameById(id){
+function getNameById(id) {
     var i, actual;
-    for (i = 0; i < usuarios.length; i++ ){
+    for (i = 0; i < usuarios.length; i++) {
         actual = usuarios[i].getAttribute("id");
-        if(actual==id){
+        if (actual == id) {
             return usuarios[i].getElementsByTagName("nombre")[0].textContent + " " + usuarios[i].getElementsByTagName("apellido")[0].textContent
         }
     }
 }
 
-function cargarComentarios(){
-    var i, j, k, l, usuarioC, contenido, fecha, hora, coment;    
+function cargarComentarios() {
+    var i, j, k, l, usuarioC, contenido, fecha, hora, coment;
 
-    for (i=0; i<usuarios.length; i++){
+    for (i = 0; i < usuarios.length; i++) {
         user = usuarios[i].getElementsByTagName("user")[0];
-        if(usuario_activo == user.textContent){
+        if (usuario_activo == user.textContent) {
             siguiendo = usuarios[i].getElementsByTagName("siguiendo")[0].getElementsByTagName("id");
-            for (j=0; j<siguiendo.length; j++){
-                for(k=0; k<noticiasXML.length; k++){
-                    if(noticiasXML[k].getAttribute("id")==siguiendo[j].textContent){
+            for (j = 0; j < siguiendo.length; j++) {
+                for (k = 0; k < noticiasXML.length; k++) {
+                    if (noticiasXML[k].getAttribute("id") == siguiendo[j].textContent) {
                         //Estoy en noticiasXML de los usuarios que sigo
                         var listaNoticias = noticiasXML[k].getElementsByTagName("noticia");
-                        for(l=0; l<listaNoticias.length; l++){
+                        for (l = 0; l < listaNoticias.length; l++) {
                             usuarioC = getNameById(noticiasXML[k].getAttribute("id"));
                             contenido = listaNoticias[l].getElementsByTagName("contenido")[0].textContent;
                             fecha = listaNoticias[l].getElementsByTagName("date")[0].textContent;
@@ -231,21 +238,20 @@ function cargarComentarios(){
                     }
                 }
             }
-        } 
+        }
     }
 
     comentarios.sort(sortByDateTime);
     agregarComentarios();
-    cargarSiguiendo();
-    cargarSeguidores();
 }
 
-function agregarComentarios(){
+function agregarComentarios() {
     var sidebar = document.getElementById("ulSidebar");
-    var i, li, div, nComents = 6; cont_coment=1;
+    var i, li, div, nComents = 6;
+    cont_coment = 1;
     var usuarioC, coment, hora, fecha;
 
-    for(i=0; i<nComents; i++){
+    for (i = 0; i < nComents; i++) {
         li = document.createElement("li");
         div = document.createElement("div");
         div.setAttribute("id", "coment" + cont_coment);
@@ -256,140 +262,85 @@ function agregarComentarios(){
         hora = comentarios[i].hora;
         fecha = comentarios[i].fecha;
 
-        div.innerHTML = usuarioC+" dijo: <br>\n"+coment+"<br>\nEl "+fecha+" a las "+hora;
+        div.innerHTML = usuarioC + " dijo: <br>\n" + coment + "<br>\nEl " + fecha + " a las " + hora;
 
         li.appendChild(div);
         sidebar.appendChild(li);
         cont_coment++;
     }
-  
+
+
+
 }
-  
-function salirPopUp(e){
+
+function salirPopUp(e) {
     key = e.keyCode;
     if (key == 27) { //27 = escape
-        var popup = document.getElementById(salirPopupId);
+        popup = document.getElementById("datosRuta");
         popup.parentNode.removeChild(popup);
     }
 }
 
-function cargarSiguiendo(){
-    var i, j;
-
-    for (i=0; i<siguiendo.length; i++){
-        for (j=0; j<usuarios.length; j++){
-            if(siguiendo[i].textContent == usuarios[j].getAttribute("id")){
-                var nombre = usuarios[j].getElementsByTagName("nombre")[0].textContent;
-                var apellido = usuarios[j].getElementsByTagName("apellido")[0].textContent;
-                nSiguiendo.push(nombre + " " + apellido);
-            }
-        }
-    }
-}
-
-function mostrarSiguiendo(){
-    var popup, frm, titulo, i, sig, leyenda, btn;
-
-    popup = document.createElement("div");
-    popup.setAttribute("class", "popup");
-    popup.setAttribute("id", "popup");
-    salirPopupId = "popup";
-    window.onkeyup = salirPopUp;
-
-    frm = document.createElement("div");
-    frm.setAttribute("id", "frmSiguiendo");
-    frm.setAttribute("class", "frmSigSeg");
-
-    titulo = document.createElement("p");
-    titulo.setAttribute("id","titulo");
-    titulo.innerHTML = "Siguiendo";
-    frm.appendChild(titulo);
-
-    for (i = 0; i < nSiguiendo.length; i++ ){
-        sig = document.createElement("div")
-        sig.innerHTML = nSiguiendo[i];
-        frm.appendChild(sig);
-    }
-
-    leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
-    btn = document.createElement("input");
-    btn.setAttribute("type", "button");
-    btn.setAttribute("class", "botonSubmit");
-    btn.setAttribute("value", "Cerrar");
-    btn.addEventListener("click", function () {
-        var popup = document.getElementById("popup");
-        popup.parentNode.removeChild(popup);
-    }, false);
-    leyenda.appendChild(btn);
-    frm.appendChild(leyenda);
-        
-    popup.appendChild(frm);
-
-    seccion = document.getElementById("map-canvas");
-    seccion.appendChild(popup);
-}
-
-function cargarSeguidores(){
-    var i, j;
+function cargarRutas() {
 
     for (i = 0; i < usuarios.length; i++) {
-        user = usuarios[i].getElementsByTagName("user")[0];
-        if (usuario_activo == user.textContent) {
-            seguidores = usuarios[i].getElementsByTagName("seguidores")[0].getElementsByTagName("id");
-        }
-    }
+        usuario = usuarios[i].getElementsByTagName("user")[0];
 
-    for (i=0; i<seguidores.length; i++){
-        for (j=0; j<usuarios.length; j++){
-            if(seguidores[i].textContent == usuarios[j].getAttribute("id")){
-                var nombre = usuarios[j].getElementsByTagName("nombre")[0].textContent;
-                var apellido = usuarios[j].getElementsByTagName("apellido")[0].textContent;
-                nSeguidores.push(nombre + " " + apellido);
+        if (usuario_activo == usuario.textContent) {
+            rutas = usuarios[i].getElementsByTagName("ruta");
+
+            for (j = 0; j < rutas.length; j++) {
+                lat_origen = rutas[j].getAttribute("lat_origen");
+                lon_origen = rutas[j].getAttribute("lon_origen");
+                lat_destino = rutas[j].getAttribute("lat_destino");
+                lon_destino = rutas[j].getAttribute("lon_destino");
+
+                dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino);
+                ca
             }
         }
     }
 }
 
-function mostrarSeguidores(){
-     var popup, frm, titulo, i, sig, leyenda, btn;
 
-    popup = document.createElement("div");
-    popup.setAttribute("class", "popup");
-    popup.setAttribute("id", "popup");
-    salirPopupId = "popup";
-    window.onkeyup = salirPopUp;
+function dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino) {
+    origen = new google.maps.LatLng(lat_origen, lon_origen);
+    destino = new google.maps.LatLng(lat_destino, lon_destino);
+    var latlngbounds = new google.maps.LatLngBounds();
 
-    frm = document.createElement("div");
-    frm.setAttribute("id", "frmSeguidores");
-    frm.setAttribute("class", "frmSigSeg");
+    marcador_origen = new google.maps.Marker({
+        position: origen,
+        map: map,
+        title: "Origen"
+    });
 
-    titulo = document.createElement("p");
-    titulo.setAttribute("id","titulo");
-    titulo.innerHTML = "Seguidores";
-    frm.appendChild(titulo);
+    var marcador_destino = new google.maps.Marker({
+        position: destino,
+        map: map,
+        title: "Destino"
+    });
+    //marcador_origen = new google.maps.LatLng(40.674389,-4.700432);
 
-    for (i = 0; i < nSeguidores.length; i++ ){
-        sig = document.createElement("div")
-        sig.innerHTML = nSeguidores[i];
-        frm.appendChild(sig);
-    }
+    var request = {
+        origin: marcador_origen.getPosition(),
+        destination: marcador_destino.getPosition(),
+        travelMode: google.maps.TravelMode.DRIVING
+    };
+    latlngbounds.extend(origen);
 
-    leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
-    btn = document.createElement("input");
-    btn.setAttribute("type", "button");
-    btn.setAttribute("class", "botonSubmit");
-    btn.setAttribute("value", "Cerrar");
-    btn.addEventListener("click", function () {
-        var popup = document.getElementById("popup");
-        popup.parentNode.removeChild(popup);
-    }, false);
-    leyenda.appendChild(btn);
-    frm.appendChild(leyenda);
-        
-    popup.appendChild(frm);
+    latlngbounds.extend(destino);
 
-    seccion = document.getElementById("map-canvas");
-    seccion.appendChild(popup);
+
+    directionsService.route(request, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+
+            map.setCenter(latlngbounds.getCenter());
+            map.fitBounds(latlngbounds);
+           // setTimeout(initialize, 1);
+
+        } else {
+            alert("Ruta Imposible, marque una ruta posible");
+        }
+    });
 }
