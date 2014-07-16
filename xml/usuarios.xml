@@ -1,47 +1,85 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <usuarios>
-   <usuario id="0001">
-      <user>chagemed</user>
-      <password>medina</password>
-      <nombre>Charlie</nombre>
-      <apellido>Medina</apellido>
-      <carro>1</carro>
-      <siguiendo>
-         <id>0002</id>
-         <id>0003</id>
-      </siguiendo>
-     <rutas>
-         <ruta origen="2.0513286248150018,-79.91425037384033" destino="2.0445952193993326,-79.94025707244873">ruta1</ruta>
-        
-      </rutas>
-   </usuario>
-   <usuario id="0002">
-      <user>jegerima</user>
-      <password>rivera</password>
-      <nombre>Jefferson</nombre>
-      <apellido>Rivera</apellido>
-      <carro>1</carro>
-      <siguiendo>
-         <id>0001</id>
-         <id>0003</id>
-      </siguiendo>
-   </usuario>
-   <usuario id="0003">
-      <user>ltamayo</user>
-      <password>tamayo</password>
-      <nombre>Leonardo</nombre>
-      <apellido>Tamayo</apellido>
-      <carro>1</carro>
-      <siguiendo>
-         <id>0001</id>
-         <id>0002</id>
-      </siguiendo>
-      <rutas>
-       
-          <ruta lat_origen="-2.1539129995924644"
+	
+    <usuario id="0001">
+		<user>chagemed</user>
+		<password>medina</password>
+		<nombre>Charlie</nombre>
+		<apellido>Medina</apellido>
+		<carro>1</carro>
+        <siguiendo>
+            <id>0002</id>
+            <id>0003</id>
+        </siguiendo>
+        <seguidores>
+            <id>0002</id>
+            <id>0003</id>
+            <id>0004</id>
+        </seguidores>
+        <img_perfil>images/chagemed.jpeg</img_perfil>
+		<rutas>
+			<ruta origen="2.0513286248150018,-79.91425037384033" destino="2.0445952193993326,-79.94025707244873">ruta1</ruta>        
+        </rutas>
+
+	</usuario>
+
+	<usuario id="0002">		
+		<user>jegerima</user>
+		<password>rivera</password>
+		<nombre>Jefferson</nombre>
+		<apellido>Rivera</apellido>
+		<carro>1</carro>
+        <siguiendo>
+            <id>0001</id>
+            <id>0003</id>
+        </siguiendo>
+        <seguidores>
+            <id>0001</id>
+            <id>0003</id>
+        </seguidores>
+        <img_perfil>images/no-photo.jpg</img_perfil>
+	</usuario>
+	
+    <usuario id="0003">		
+		<user>ltamayo</user>
+		<password>tamayo</password>
+		<nombre>Leonardo</nombre>
+		<apellido>Tamayo</apellido>
+		<carro>1</carro>
+        <siguiendo>
+            <id>0001</id>
+            <id>0002</id>
+        </siguiendo>
+        <seguidores>
+            <id>0001</id>
+            <id>0002</id>
+        </seguidores>
+        <img_perfil>images/no-photo.jpg</img_perfil>
+		<rutas>
+        <ruta lat_origen="-2.1539129995924644"
                 lon_origen="-79.95120048522949" 
                 lat_destino="-2.1439207564417373"
-                lon_destino="-79.96767997741699">ruta1</ruta>
+                lon_destino="-79.96767997741699">
+            ruta1
+        </ruta>
       </rutas>
-   </usuario>
+	</usuario>
+
+    <usuario id="0004">		
+		<user>rubancar</user>
+		<password>rubancar</password>
+		<nombre>Ruben</nombre>
+		<apellido>Carvajal</apellido>
+		<carro>0</carro>
+        <siguiendo>
+            <id>0003</id>
+            <id>0001</id>
+        </siguiendo>
+        <seguidores>
+            <id>0002</id>
+            <id>0003</id>
+        </seguidores>
+        <img_perfil>images/rubancar.jpeg</img_perfil>
+	</usuario>
+
 </usuarios>

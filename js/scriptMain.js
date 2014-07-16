@@ -1,20 +1,14 @@
 window.addEventListener("load", inicializar);
 
-
-
-var usuarios, map, permitirMarcado = false,
-    accion = "cargarComentarios",
-    noticiasXML;
+var usuarios, map, permitirMarcado = false, accion = "cargarComentarios", noticiasXML, salirPopupId;
 var cont = 0;
 var directionsService = new google.maps.DirectionsService();
 var markerOrigen = null;
 var markerDestino = null;
 var directionsDisplay = new google.maps.DirectionsRenderer();
 var usuario_activo = location.search.substring(1, location.search.length);
-var siguiendo = [];
-var comentarios = [];
+var siguiendo = [], seguidores = [], nSiguiendo = [], nSeguidores = [] , comentarios = [];
 var ResponsiveON = false;
-
 
 function inicializar() {
     initialize();
@@ -29,8 +23,7 @@ function inicializar() {
     RespMenu.addEventListener("click", ResponsiveMenu, false);
 }
 
-function ResponsiveMenu()
-{
+function ResponsiveMenu(){
     var men = document.getElementById("menuul");
      if(!ResponsiveON)
      {
@@ -47,7 +40,7 @@ function ResponsiveMenu()
 function initialize() {
 
     var mapOptions = {
-        zoom: 8
+        zoom: 12
     };
 
     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
@@ -178,8 +171,6 @@ function abrirXMLUsuarios(e) {
     var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(xml, "application/xml");
     usuarios = xmlDoc.documentElement.getElementsByTagName("usuario");
-
-
 }
 
 function cargarNoticiasXML() {
@@ -209,14 +200,14 @@ function Comentario(usuario, contenido, fecha, hora) {
 
 function sortByDateTime(a, b) {
     if (a.fecha < b.fecha) {
-        return 0;
-    } else if (a.fecha > b.fecha) {
         return 1;
+    } else if (a.fecha > b.fecha) {
+        return 0;
     } else if (a.fecha == b.fecha) {
         if (a.hora < b.hora) {
-            return 0;
-        } else if (a.hora > b.hora) {
             return 1;
+        } else if (a.hora > b.hora) {
+            return 0;
         } else if (a.hora == b.hora) {
             return 1;
         }
@@ -261,6 +252,8 @@ function cargarComentarios() {
 
     comentarios.sort(sortByDateTime);
     agregarComentarios();
+    cargarSiguiendo();
+    cargarSeguidores();
 }
 
 function agregarComentarios() {
@@ -294,9 +287,138 @@ function agregarComentarios() {
 function salirPopUp(e) {
     key = e.keyCode;
     if (key == 27) { //27 = escape
-        popup = document.getElementById("datosRuta");
+        popup = document.getElementById(salirPopupId);
         popup.parentNode.removeChild(popup);
     }
+}
+
+function cargarSiguiendo(){
+    var i, j;
+
+    for (i=0; i<siguiendo.length; i++){
+        for (j=0; j<usuarios.length; j++){
+            if(siguiendo[i].textContent == usuarios[j].getAttribute("id")){
+                var nombre = usuarios[j].getElementsByTagName("nombre")[0].textContent;
+                var apellido = usuarios[j].getElementsByTagName("apellido")[0].textContent;
+                nSiguiendo.push(nombre + " " + apellido);
+            }
+        }
+    }
+}
+
+function mostrarSiguiendo(){
+    var popup, frm, titulo, i, sig, leyenda, btn;
+
+    popup = document.createElement("div");
+    popup.setAttribute("class", "popup");
+    popup.setAttribute("id", "popup");
+    salirPopupId = "popup";
+    window.onkeyup = salirPopUp;
+
+    frm = document.createElement("div");
+    frm.setAttribute("id", "frmSiguiendo");
+    frm.setAttribute("class", "frmSigSeg");
+
+    titulo = document.createElement("p");
+    titulo.setAttribute("id","titulo");
+    titulo.innerHTML = "Siguiendo";
+    frm.appendChild(titulo);
+
+    for (i = 0; i < nSiguiendo.length; i++ ){
+        sig = document.createElement("div")
+        sig.innerHTML = nSiguiendo[i];
+        frm.appendChild(sig);
+    }
+
+    leyenda = document.createElement("div");
+    leyenda.setAttribute("class", "leyenda");
+    btn = document.createElement("input");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("class", "botonSubmit");
+    btn.setAttribute("value", "Cerrar");
+    btn.addEventListener("click", function () {
+        var popup = document.getElementById("popup");
+        popup.parentNode.removeChild(popup);
+    }, false);
+    leyenda.appendChild(btn);
+    frm.appendChild(leyenda);
+        
+    popup.appendChild(frm);
+
+    seccion = document.getElementById("map-canvas");
+    seccion.appendChild(popup);
+}
+
+function cargarSeguidores(){
+    var i, j;
+
+    for (i = 0; i < usuarios.length; i++) {
+        user = usuarios[i].getElementsByTagName("user")[0];
+        if (usuario_activo == user.textContent) {
+            seguidores = usuarios[i].getElementsByTagName("seguidores")[0].getElementsByTagName("id");
+        }
+    }
+
+    for (i=0; i<seguidores.length; i++){
+        for (j=0; j<usuarios.length; j++){
+            if(seguidores[i].textContent == usuarios[j].getAttribute("id")){
+                var nombre = usuarios[j].getElementsByTagName("nombre")[0].textContent;
+                var apellido = usuarios[j].getElementsByTagName("apellido")[0].textContent;
+                nSeguidores.push(nombre + " " + apellido);
+            }
+        }
+    }
+}
+
+function mostrarSeguidores(){
+     var popup, frm, titulo, i, sig, leyenda, btn;
+
+    popup = document.createElement("div");
+    popup.setAttribute("class", "popup");
+    popup.setAttribute("id", "popup");
+    salirPopupId = "popup";
+    window.onkeyup = salirPopUp;
+
+    frm = document.createElement("div");
+    frm.setAttribute("id", "frmSeguidores");
+    frm.setAttribute("class", "frmSigSeg");
+
+    titulo = document.createElement("p");
+    titulo.setAttribute("id","titulo");
+    titulo.innerHTML = "Seguidores";
+    frm.appendChild(titulo);
+
+    for (i = 0; i < nSeguidores.length; i++ ){
+        sig = document.createElement("div")
+        sig.innerHTML = nSeguidores[i];
+        frm.appendChild(sig);
+    }
+
+    leyenda = document.createElement("div");
+    leyenda.setAttribute("class", "leyenda");
+    btn = document.createElement("input");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("class", "botonSubmit");
+    btn.setAttribute("value", "Cerrar");
+    btn.addEventListener("click", function () {
+        var popup = document.getElementById("popup");
+        popup.parentNode.removeChild(popup);
+    }, false);
+    leyenda.appendChild(btn);
+    frm.appendChild(leyenda);
+        
+    popup.appendChild(frm);
+
+    seccion = document.getElementById("map-canvas");
+    seccion.appendChild(popup);
+}
+
+function buscarPerfil(){
+    window.open("perfil.html?"+usuario_activo,"_self");
+}
+
+function mostrarInicio(){
+    window.open("main.html?"+usuario_activo,"_self");
 }
 
 function cargarRutas() {
@@ -314,12 +436,10 @@ function cargarRutas() {
                 lon_destino = rutas[j].getAttribute("lon_destino");
 
                 dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino);
-                ca
             }
         }
     }
 }
-
 
 function dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino) {
     origen = new google.maps.LatLng(lat_origen, lon_origen);

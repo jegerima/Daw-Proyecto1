@@ -67,7 +67,6 @@ function validarCuenta(){
     } else {
         if (loading) quitarLoading();
         alert("Nombre de usuario y/o contraseña incorrecto");
-        usuario.value = "";
         contrasena.value = "";
         usuario.setAttribute("autofocus", "true");
     }
@@ -137,6 +136,7 @@ function crearFrmRegistro(){
     carro.setAttribute("type", "radio");
     carro.setAttribute("id", "carro");
     carro.setAttribute("value", "carro");
+    carro.setAttribute("name", "carro");
     carro.setAttribute("checked", "checked");
     var label = document.createElement("label");
     label.setAttribute("id", "carro");
@@ -151,6 +151,7 @@ function crearFrmRegistro(){
     nocarro.setAttribute("type", "radio");
     nocarro.setAttribute("id", "noCarro");
     nocarro.setAttribute("value", "noCarro");
+    nocarro.setAttribute("name", "carro");
     var label = document.createElement("label");
     label.setAttribute("id", "noCarro");
     label.innerHTML = "No tengo carro";
@@ -164,8 +165,6 @@ function crearFrmRegistro(){
     btn.setAttribute("type", "submit");
     btn.setAttribute("class","botonSubmit");
     btn.setAttribute("value","Registrar");
-    //btn.addEventListener("click", mostrarLoading, false);
-    //btn.addEventListener("click", function () {accion="registrar"; }, false);
     leyenda.appendChild(btn);
     form.appendChild(leyenda);
 
@@ -178,6 +177,7 @@ function crearFrmRegistro(){
     a.setAttribute("onclick","javascript:cambiarFrms()");
     a.innerHTML = "<< Atrás";
     a.style.fontWeight = "bold";
+    a.style.color = "#000000";
     leyenda.appendChild(a);
     registro.appendChild(leyenda);
 
