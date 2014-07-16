@@ -135,6 +135,20 @@ body {
     margin-bottom: 10px;
 }
 
+#frmPeticion {
+    background-color: #1A1A1A;
+    font-family: 'Century Gothic';
+    color: White;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    width: 500px;
+    height: auto;
+    margin-top: 80px;
+    margin-left: 300px;
+    border-radius: 10px;
+    text-align: center;
+}
+
 /*
  * //////////////////////////////////////////////////////////////////////////////////////////
  *                          Resoluciones entre 240px de ancho y menor a 400px
