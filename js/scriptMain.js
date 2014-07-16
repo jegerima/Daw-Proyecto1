@@ -136,7 +136,7 @@ function indicarHoraRuta() {
     form.appendChild(hora);
 
     leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
+    leyenda.setAttribute("class", "leyenda");
     btn = document.createElement("input");
     btn.setAttribute("type", "submit");
     btn.setAttribute("class", "botonSubmit");

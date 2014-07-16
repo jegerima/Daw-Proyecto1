@@ -2,6 +2,7 @@
    
 html {
     height: 100%;
+    overflow-y: hidden;
 }
 
 body {
@@ -26,11 +27,11 @@ body {
     padding: 0px;
 }
 
-#registrar a, a:link, a:active, a:visited {
-    color: Black;
+#registrar{
+    color: black;
 }
 
-#registar a:hover {
+#registrar:hover {
     color: #66757F !important;
 }
 
@@ -173,7 +174,7 @@ body {
         text-align: center;
     }
 
-    #leyenda {
+    .leyenda {
         font-family: 'Century Gothic';
         font-size: 12px;
         text-align: center;
@@ -406,7 +407,7 @@ body {
         text-align: center;
     }
 
-    #leyenda {
+    .leyenda {
         font-family: 'Century Gothic';
         text-align: center;
         padding: 5px;
@@ -657,7 +658,7 @@ body {
         text-align: center;
     }
 
-    #leyenda {
+    .leyenda {
         font-family: 'Century Gothic';
         text-align: center;
         padding: 5px;
@@ -882,7 +883,7 @@ body {
         text-align: center;
     }
 
-    #leyenda {
+    .leyenda {
         font-family: 'Century Gothic';
         text-align: center;
         padding: 5px;

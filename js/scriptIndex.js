@@ -89,7 +89,7 @@ function crearFrmRegistro(){
     registro.appendChild(titulo);
 
     leyenda = document.createElement("div");
-    leyenda.setAttribute("id","leyenda");
+    leyenda.setAttribute("class","leyenda");
     leyenda.innerHTML = "Registrate ahora";
     registro.appendChild(leyenda);
 
@@ -98,7 +98,7 @@ function crearFrmRegistro(){
     form.setAttribute("action", "javascript:cargarUsuariosXML()");
 
     leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
+    leyenda.setAttribute("class", "leyenda");
     userBox = document.createElement("input");
     userBox.setAttribute("id", "userBox");
     userBox.setAttribute("type", "text");
@@ -110,7 +110,7 @@ function crearFrmRegistro(){
     form.appendChild(leyenda);
 
     leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
+    leyenda.setAttribute("class", "leyenda");
     passBox = document.createElement("input");
     passBox.setAttribute("id", "passBox");
     passBox.setAttribute("type", "password");
@@ -121,7 +121,7 @@ function crearFrmRegistro(){
     form.appendChild(leyenda);
 
     leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
+    leyenda.setAttribute("class", "leyenda");
     passBox = document.createElement("input");
     passBox.setAttribute("id", "cpassBox");
     passBox.setAttribute("type", "password");
@@ -132,7 +132,7 @@ function crearFrmRegistro(){
     form.appendChild(leyenda);
 
     leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
+    leyenda.setAttribute("class", "leyenda");
     carro = document.createElement("input");
     carro.setAttribute("type", "radio");
     carro.setAttribute("id", "carro");
@@ -146,7 +146,7 @@ function crearFrmRegistro(){
     form.appendChild(leyenda);
 
     leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
+    leyenda.setAttribute("class", "leyenda");
     nocarro = document.createElement("input");
     nocarro.setAttribute("type", "radio");
     nocarro.setAttribute("id", "noCarro");
@@ -159,7 +159,7 @@ function crearFrmRegistro(){
     form.appendChild(leyenda);
 
     leyenda = document.createElement("div");
-    leyenda.setAttribute("id", "leyenda");
+    leyenda.setAttribute("class", "leyenda");
     btn = document.createElement("input");
     btn.setAttribute("type", "submit");
     btn.setAttribute("class","botonSubmit");
@@ -172,7 +172,7 @@ function crearFrmRegistro(){
     registro.appendChild(form);
 
     leyenda = document.createElement("div");
-    leyenda.setAttribute("id","leyenda");
+    leyenda.setAttribute("class","leyenda");
     var a = document.createElement("a");
     a.setAttribute("href", "#");
     a.setAttribute("onclick","javascript:cambiarFrms()");
