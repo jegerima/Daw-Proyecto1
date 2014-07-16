@@ -8,6 +8,7 @@ var markerDestino = null;
 var directionsDisplay = new google.maps.DirectionsRenderer();
 var usuario_activo = location.search.substring(1, location.search.length);
 var siguiendo = [], seguidores = [], nSiguiendo = [], nSeguidores = [] , comentarios = [];
+var ResponsiveON = false;
 
 function initialize() {
 
@@ -33,6 +34,25 @@ function initialize() {
     directionsDisplay.setMap(map);
     cargarUsuariosXML();
     cargarNoticiasXML();
+
+    var RespMenu = document.getElementById("pull");
+    RespMenu.addEventListener("click", ResponsiveMenu, false);
+}
+
+function ResponsiveMenu()
+{
+    var men = document.getElementById("menuul");
+     if(!ResponsiveON)
+     {
+         men.setAttribute("class","RespON");
+         ResponsiveON = true;
+     }
+     else
+     {
+         men.setAttribute("class","RespOFF");
+         ResponsiveON = false;
+        
+     }
 }
 
 function darclick(evento) {
