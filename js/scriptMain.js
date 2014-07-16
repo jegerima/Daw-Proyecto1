@@ -8,7 +8,7 @@ var directionsService = new google.maps.DirectionsService();
 var markerOrigen = null;
 var markerDestino = null;
 var directionsDisplay = new google.maps.DirectionsRenderer({
-    suppressMarkers: false,
+    suppressMarkers: true,
     suppressInfoWindows: true
 });
 var arreglo_lat_lng = new Array();
@@ -18,7 +18,7 @@ var siguiendo = [],
     nSiguiendo = [],
     nSeguidores = [],
     comentarios = [],
-    usersPet=[];
+    usersPet = [];
 var ResponsiveON = false;
 
 function inicializar() {
@@ -335,7 +335,7 @@ function agregarBtnSalir() {
     var btnSalir = document.createElement("input");
     btnSalir.setAttribute("type", "button");
     btnSalir.setAttribute("class", "botonSubmit");
-    btnSalir.setAttribute("value", "Cerrar Sesión");
+    btnSalir.setAttribute("value", "Cerrar Sesion");
     btnSalir.addEventListener("click", function () {
         window.open("index.html", "_self");
     }, false);
@@ -503,7 +503,7 @@ function cargarRutas() {
 function dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino) {
 
     var directionsDisplay2 = new google.maps.DirectionsRenderer({
-        suppressMarkers: false,
+        suppressMarkers: true,
         suppressInfoWindows: true
     });
     directionsDisplay2.setMap(map);
@@ -522,9 +522,18 @@ function dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino) {
     arreglo_lat_lng.push(destino);
 
 
+
+
     directionsService.route(request, function (response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay2.setDirections(response);
+
+
+            var leg = response.routes[0].legs[0];
+            makeMarker(leg.start_location, "title");
+            makeMarker(leg.end_location, 'title');
+
+
 
             //ajustarApantalla();
             // setTimeout(initialize, 1);
@@ -536,6 +545,21 @@ function dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino) {
 }
 
 
+
+
+function makeMarker(position, title) {
+    var mark = new google.maps.Marker({
+        position: position,
+        map: map,
+        title: title
+    });
+    google.maps.event.addListener(mark, 'click', function (event) {
+
+        confirmarPeticion();
+    });
+
+}
+
 function ajustarApantalla() {
     var latlngbounds = new google.maps.LatLngBounds();
 
@@ -546,7 +570,7 @@ function ajustarApantalla() {
     map.setCenter(latlngbounds.getCenter(), map.getBoundsZoomLevel(latlngbounds));
 }
 
-function nuevoComent(){
+function nuevoComent() {
     var popup, form, leyenda, txtComent, hora, btn;
 
     popup = document.createElement("div");
@@ -582,14 +606,14 @@ function nuevoComent(){
     seccion.appendChild(popup);
 }
 
-function guardarComent(){
+function guardarComent() {
     //Se guarda la informacion del comentario en el XML
     var popup = document.getElementById("popup");
     popup.parentNode.removeChild(popup);
 }
 
-function confirmarPeticion(){
-   var popup, form, leyenda, txtComent, hora, btn;
+function confirmarPeticion() {
+    var popup, form, leyenda, txtComent, hora, btn;
 
     popup = document.createElement("div");
     popup.setAttribute("class", "popup");
@@ -602,7 +626,7 @@ function confirmarPeticion(){
     form.setAttribute("action", "javascript:mandarPeticion()");
 
     leyenda = document.createElement("div");
-    leyenda.innerHTML = "¿Seguro que desea enviar una peticion a esta ruta?";
+    leyenda.innerHTML = "&iquest;Seguro que desea enviar una peticion a esta ruta?";
     form.appendChild(leyenda);
 
     leyenda = document.createElement("div");
@@ -620,13 +644,13 @@ function confirmarPeticion(){
     seccion.appendChild(popup);
 }
 
-function mandarPeticion(){
+function mandarPeticion() {
     //Manda peticion al usuario de la ruta seleccionada
     var popup = document.getElementById("popup");
     popup.parentNode.removeChild(popup);
 }
 
-function cargarPeticiones(){
+function cargarPeticiones() {
     var i, peticiones;
 
     for (i = 0; i < usuarios.length; i++) {
@@ -643,7 +667,7 @@ function cargarPeticiones(){
     mostrarPeticiones();
 }
 
-function mostrarPeticiones(){
+function mostrarPeticiones() {
     var popup, frm, titulo, i, pet, leyenda, btn;
 
     popup = document.createElement("div");
@@ -677,7 +701,7 @@ function mostrarPeticiones(){
         aceptar.addEventListener("click", aceptarPeticion, false);
         pet.appendChild(nombre);
         pet.appendChild(aceptar);
-        
+
         frm.appendChild(pet);
     }
 
@@ -701,7 +725,7 @@ function mostrarPeticiones(){
     seccion.appendChild(popup);
 }
 
-function aceptarPeticion(){
+function aceptarPeticion() {
     //Eliminar el id de los del tag peticiones en usuario.xml
     var id = this.getAttribute("data-id");
     var index = usersPet.indexOf(id);
