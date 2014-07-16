@@ -133,7 +133,25 @@ function agregarComentarios(){
         sidebar.appendChild(li);
         cont_coment++;
     }
+
+    agregarBtnSalir();
   
+}
+
+function agregarBtnSalir(){
+    var sidebar = document.getElementById("ulSidebar");
+
+    var div = document.createElement("div");
+    div.setAttribute("id", "divBtnSalir");
+    var btnSalir = document.createElement("input");
+    btnSalir.setAttribute("type", "button");
+    btnSalir.setAttribute("class", "botonSubmit");
+    btnSalir.setAttribute("value", "Cerrar Sesión");
+    btnSalir.addEventListener("click", function () {
+        window.open("index.html","_self");
+    }, false);
+    div.appendChild(btnSalir);
+    sidebar.appendChild(div);
 }
   
 function salirPopUp(e){

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <usuarios>
    <usuario id="0001">
+
       <user>chagemed</user>
       <password>medina</password>
       <nombre>Charlie</nombre>
@@ -21,6 +22,7 @@
          <ruta lat_origen="-2.140661469873037" lon_origen="-79.96248722076416" lat_destino="-2.1452502002866045" lon_destino="-79.96416091918945">ruta2</ruta>
       </rutas>
    </usuario>
+
    <usuario id="0002">
       <user>jegerima</user>
       <password>rivera</password>
@@ -41,6 +43,7 @@
          <ruta lat_origen="-2.140661469873037" lon_origen="-79.96248722076416" lat_destino="-2.1452502002866045" lon_destino="-79.96416091918945">ruta2</ruta>
       </rutas>
    </usuario>
+
    <usuario id="0003">
       <user>ltamayo</user>
       <password>tamayo</password>
@@ -61,6 +64,7 @@
          <ruta lat_origen="-2.140661469873037" lon_origen="-79.96248722076416" lat_destino="-2.1452502002866045" lon_destino="-79.96416091918945">ruta2</ruta>
       </rutas>
    </usuario>
+
    <usuario id="0004">
       <user>rubancar</user>
       <password>rubancar</password>
