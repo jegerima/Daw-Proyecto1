@@ -26,6 +26,7 @@ function abrirXMLUsuarios(e) {
     var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(xml, "application/xml");
     usuarios = xmlDoc.documentElement.getElementsByTagName("usuario");
+    validarCrearRuta();
 }
 
 function cargarNoticiasXML() {
@@ -45,6 +46,27 @@ function abrirXMLNoticias(e) {
     }
     cargarDatosPerfil();
     cargarMisComents();
+}
+
+function validarCrearRuta(){
+    var i, actual, tieneCarro;
+
+    for(i=0; i<usuarios.length; i++){
+        if(usuarios[i].getElementsByTagName("user")[0].textContent==usuario_activo){
+            if(usuarios[i].getElementsByTagName("carro")[0].textContent=="1"){
+                tieneCarro = true;
+                break;
+            } else {
+                tieneCarro = false;
+                break;
+            }
+        }
+    }
+
+    if(!tieneCarro){
+        var li = document.getElementById("crearRuta");
+        li.parentNode.removeChild(li);
+    }
 }
 
 function Comentario(usuario, contenido, fecha, hora) {
