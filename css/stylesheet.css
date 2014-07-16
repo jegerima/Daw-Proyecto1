@@ -116,6 +116,25 @@ body {
     font-size: 18px;
 }
 
+#frmNewComent {
+    background-color: #1A1A1A;
+    font-family: 'Century Gothic';
+    color: White;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    width: 700px;
+    height: auto;
+    margin-top: 80px;
+    margin-left: 150px;
+    border-radius: 10px;
+}
+
+#txtComent{
+    width: 670px;
+    margin-bottom: 10px;
+}
+
 /*
  * //////////////////////////////////////////////////////////////////////////////////////////
  *                          Resoluciones entre 240px de ancho y menor a 400px
@@ -1121,4 +1140,6 @@ body {
         padding-left: 15px;
     
     }
+    
+    
 }

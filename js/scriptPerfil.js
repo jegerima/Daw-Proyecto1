@@ -469,3 +469,47 @@ function mostrarMisComents() {
         miComId++;
     }
 }
+
+function nuevoComent(){
+    var popup, form, leyenda, txtComent, hora, btn;
+
+    popup = document.createElement("div");
+    popup.setAttribute("class", "popup");
+    popup.setAttribute("id", "popup");
+    salirPopupId = "popup";
+    window.onkeyup = salirPopUp;
+
+    form = document.createElement("form");
+    form.setAttribute("id", "frmNewComent");
+    form.setAttribute("action", "javascript:guardarComent()");
+
+    leyenda = document.createElement("div");
+    leyenda.innerHTML = "Ingrese su comentario: ";
+    txtComent = document.createElement("input");
+    txtComent.setAttribute("type", "text");
+    txtComent.setAttribute("id", "txtComent");
+    form.appendChild(leyenda);
+    form.appendChild(txtComent);
+
+    leyenda = document.createElement("div");
+    leyenda.setAttribute("class", "leyenda");
+    btn = document.createElement("input");
+    btn.setAttribute("type", "submit");
+    btn.setAttribute("class", "botonSubmit");
+    btn.setAttribute("value", "Aceptar");
+    leyenda.appendChild(btn);
+    form.appendChild(leyenda);
+
+    popup.appendChild(form);
+
+    seccion = document.getElementById("contentPerfil");
+    seccion.appendChild(popup);
+}
+
+function guardarComent(){
+    //Se guarda la informacion del comentario en el XML
+    var popup = document.getElementById("popup");
+    popup.parentNode.removeChild(popup);
+}
+
+
