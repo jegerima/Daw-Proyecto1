@@ -475,35 +475,47 @@ body {
     }
 
     #menunav {
-        background: #1A1A1A;
-        line-height: 46px;
-        margin: -16px -10px 0px -10px;
-        width: 98%;
-        color: #E3262E;
-        /*box-shadow: 0px 1px 7px #000;*/
-        height: auto;
-        overflow: hidden;
-        padding-left: 35px;
-        float: right;
+        border-bottom: 0;
+        background: black;
     }
 
+    .RespOFF {
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+		height: auto;
+        display: none;
+	}
+
+    .RespON {
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+		height: auto;
+        transition: top 1s;
+        -webkit-transition: top 1s;
+    }
+
+
     #menunav a, a:link, a:active, a:visited, a:hover {
-        color: #66757F;
+        color: white;
         font-family: 'Century Gothic';
         text-decoration: none;
     }
 
-    #menunav ul li {
-        text-align: center;
-        float: left;
+    #menunav li {
+        font-family: 'Century Gothic';
+        background:  gray;
         list-style: none;
-        padding: 0px;
+        display: inline;
+        float: left;
+        position: relative;
         margin: 0px;
-        width: 49%;
-        height: 40px;
-        transition: background 0.3s;
-        border-bottom: 1px solid white;
-        border-left: 1px solid white;
+        padding: 0px;
+        width: 33.3%;     
+        border-bottom: 1px solid black;
+        text-align: center;
+        color: white;
     }
 
     #menunav ul li:hover {
@@ -516,14 +528,30 @@ body {
         color: White;
     }
 
+    nav a#pull {
+		display: block;
+		background-color: black;
+		width: 100%;
+		position: relative;
+        overflow: hidden;
+	}
+
+    #respMenu
+    {
+        float: right;
+        margin: 5px;
+        width:  30px;
+        height: 30px;
+    }
+
     .selectedM {
-        background-color: #E3262E;
-        cursor: pointer;
+        //background-color: #E3262E;
+        //cursor: pointer;
     }
 
     .selectedM a {
-        color: #fff !important;
-        font-weight: bold;
+        //color: #fff !important;
+        //font-weight: bold;
     }
 
     #logoMain {

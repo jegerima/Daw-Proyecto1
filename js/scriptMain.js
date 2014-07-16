@@ -13,6 +13,7 @@ var directionsDisplay = new google.maps.DirectionsRenderer();
 var usuario_activo = location.search.substring(1, location.search.length);
 var siguiendo = [];
 var comentarios = [];
+var ResponsiveON = false;
 
 
 function inicializar() {
@@ -24,6 +25,23 @@ function inicializar() {
         cargarRutas();
 
     });
+    var RespMenu = document.getElementById("pull");
+    RespMenu.addEventListener("click", ResponsiveMenu, false);
+}
+
+function ResponsiveMenu()
+{
+    var men = document.getElementById("menuul");
+     if(!ResponsiveON)
+     {
+         men.setAttribute("class","RespON");
+         ResponsiveON = true;
+     }
+     else
+     {
+         men.setAttribute("class","RespOFF");
+         ResponsiveON = false;     
+     }
 }
 
 function initialize() {
@@ -335,8 +353,8 @@ function dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino) {
         if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay.setDirections(response);
 
-            map.setCenter(latlngbounds.getCenter());
-            map.fitBounds(latlngbounds);
+        //    map.setCenter(latlngbounds.getCenter());
+          //  map.fitBounds(latlngbounds);
            // setTimeout(initialize, 1);
 
         } else {
