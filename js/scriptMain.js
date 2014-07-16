@@ -17,7 +17,8 @@ var siguiendo = [],
     seguidores = [],
     nSiguiendo = [],
     nSeguidores = [],
-    comentarios = [];
+    comentarios = [],
+    usersPet=[];
 var ResponsiveON = false;
 
 function inicializar() {
@@ -202,7 +203,7 @@ function cargarNoticiasXML() {
 }
 
 function validarCrearRuta() {
-    var i, actual, tieneCarro;
+    var i, tieneCarro;
 
     for (i = 0; i < usuarios.length; i++) {
         if (usuarios[i].getElementsByTagName("user")[0].textContent == usuario_activo) {
@@ -623,4 +624,91 @@ function mandarPeticion(){
     //Manda peticion al usuario de la ruta seleccionada
     var popup = document.getElementById("popup");
     popup.parentNode.removeChild(popup);
+}
+
+function cargarPeticiones(){
+    var i, peticiones;
+
+    for (i = 0; i < usuarios.length; i++) {
+        if (usuarios[i].getElementsByTagName("user")[0].textContent == usuario_activo) {
+            peticiones = usuarios[i].getElementsByTagName("peticiones");
+            break;
+        }
+    }
+
+    for (i = 0; i < peticiones.length; i++) {
+        usersPet.push(peticiones[i].getElementsByTagName("id")[0].textContent);
+    }
+
+    mostrarPeticiones();
+}
+
+function mostrarPeticiones(){
+    var popup, frm, titulo, i, pet, leyenda, btn;
+
+    popup = document.createElement("div");
+    popup.setAttribute("class", "popup");
+    popup.setAttribute("id", "popup");
+    salirPopupId = "popup";
+    window.onkeyup = salirPopUp;
+
+    frm = document.createElement("div");
+    frm.setAttribute("id", "frmPeticiones");
+
+    titulo = document.createElement("p");
+    titulo.setAttribute("id", "titulo");
+    titulo.innerHTML = "Peticiones";
+    frm.appendChild(titulo);
+
+    var leyenda = document.createElement("p");
+    leyenda.setAttribute("class", "leyenda");
+    leyenda.innerHTML = "Tiene peticiones pendientes de los siguientes usuarios:";
+    frm.appendChild(leyenda);
+
+    for (i = 0; i < usersPet.length; i++) {
+        pet = document.createElement("div")
+        var nombre = document.createElement("text");
+        nombre.innerHTML = getNameById(usersPet[i]);
+        var aceptar = document.createElement("input");
+        aceptar.setAttribute("class", "botonSubmit");
+        aceptar.setAttribute("id", "botonAceptarPet");
+        aceptar.setAttribute("data-id", usersPet[i]);
+        aceptar.setAttribute("value", "Aceptar");
+        aceptar.addEventListener("click", aceptarPeticion, false);
+        pet.appendChild(nombre);
+        pet.appendChild(aceptar);
+        
+        frm.appendChild(pet);
+    }
+
+    leyenda = document.createElement("div");
+    leyenda.setAttribute("class", "leyenda");
+    btn = document.createElement("input");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("id", "cerrarPet");
+    btn.setAttribute("class", "botonSubmit");
+    btn.setAttribute("value", "Cerrar");
+    btn.addEventListener("click", function () {
+        var popup = document.getElementById("popup");
+        popup.parentNode.removeChild(popup);
+    }, false);
+    leyenda.appendChild(btn);
+    frm.appendChild(leyenda);
+
+    popup.appendChild(frm);
+
+    seccion = document.getElementById("map-canvas");
+    seccion.appendChild(popup);
+}
+
+function aceptarPeticion(){
+    //Eliminar el id de los del tag peticiones en usuario.xml
+    var id = this.getAttribute("data-id");
+    var index = usersPet.indexOf(id);
+    usersPet.splice(index, 1);
+
+    var popup = document.getElementById("popup");
+    popup.parentNode.removeChild(popup);
+
+    mostrarPeticiones();
 }

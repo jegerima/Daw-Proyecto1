@@ -149,6 +149,29 @@ body {
     text-align: center;
 }
 
+#frmPeticiones {
+    background-color: #1A1A1A;
+    font-family: 'Century Gothic';
+    color: White;
+    padding-bottom: 10px;
+    width: 500px;
+    height: auto;    
+    margin-left: 300px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#botonAceptarPet{
+    margin-left: 30%;
+    text-align: center;
+    height: 25px;
+    width: 120px;
+}
+
+#cerrarPet{
+    margin-top: 10px;
+}
+
 /*
  * //////////////////////////////////////////////////////////////////////////////////////////
  *                          Resoluciones entre 240px de ancho y menor a 400px
