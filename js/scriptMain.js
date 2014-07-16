@@ -526,7 +526,7 @@ function dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino) {
         if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay2.setDirections(response);
 
-            ajustarApantalla();
+            //ajustarApantalla();
             // setTimeout(initialize, 1);
 
         } else {
