@@ -11,6 +11,7 @@ var directionsDisplay = new google.maps.DirectionsRenderer({
     suppressMarkers: false,
     suppressInfoWindows: true
 });
+var arreglo_lat_lng = new Array();
 var usuario_activo = location.search.substring(1, location.search.length);
 var siguiendo = [],
     seguidores = [],
@@ -18,13 +19,11 @@ var siguiendo = [],
     nSeguidores = [],
     comentarios = [];
 var ResponsiveON = false;
-var latlngbounds = new google.maps.LatLngBounds();
 
 function inicializar() {
     initialize();
     cargarUsuariosXML();
     cargarNoticiasXML();
-
     google.maps.event.addListenerOnce(map, 'idle', function () {
 
         cargarRutas();
@@ -69,6 +68,7 @@ function initialize() {
     directionsDisplay.setMap(map);
 
 
+
 }
 
 function darclick(evento) {
@@ -79,26 +79,37 @@ function darclick(evento) {
             map: map,
             title: "Origen"
         });
+
         cont = 1;
         return;
 
     } else {
         var myLatlngDestino = evento.latLng;
+
         markerDestino = new google.maps.Marker({
             position: myLatlngDestino,
             map: map,
             title: "Destino"
         });
-        alert("Origen: " + markerOrigen.getPosition() + " DEstino :" + markerDestino.getPosition());
+        arreglo_lat_lng.push(myLatlngOrigen);
+
+        arreglo_lat_lng.push(myLatlngDestino);
+        // alert("Origen: " + markerOrigen.getPosition() + " DEstino :" + markerDestino.getPosition());
         var request = {
 
             origin: markerOrigen.getPosition(),
+            //origin: myLatlngOrigen,
+            //destination: myLatlngDestino,
             destination: markerDestino.getPosition(),
             travelMode: google.maps.TravelMode.DRIVING
         };
         directionsService.route(request, function (response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
+
+                ajustarApantalla();
+
+
             }
         });
 
@@ -189,23 +200,12 @@ function cargarNoticiasXML() {
     request.send(null);
 }
 
-function abrirXMLNoticias(e) {
-    var xml = e.target.responseText;
-    var parser = new DOMParser();
-    var xmlDoc = parser.parseFromString(xml, "application/xml");
-    noticiasXML = xmlDoc.documentElement.getElementsByTagName("usuario");
-    if (accion == "cargarComentarios") {
-        cargarComentarios();
-
-    }
-}
-
-function validarCrearRuta(){
+function validarCrearRuta() {
     var i, actual, tieneCarro;
 
-    for(i=0; i<usuarios.length; i++){
-        if(usuarios[i].getElementsByTagName("user")[0].textContent==usuario_activo){
-            if(usuarios[i].getElementsByTagName("carro")[0].textContent=="1"){
+    for (i = 0; i < usuarios.length; i++) {
+        if (usuarios[i].getElementsByTagName("user")[0].textContent == usuario_activo) {
+            if (usuarios[i].getElementsByTagName("carro")[0].textContent == "1") {
                 tieneCarro = true;
                 break;
             } else {
@@ -215,9 +215,21 @@ function validarCrearRuta(){
         }
     }
 
-    if(!tieneCarro){
+    if (!tieneCarro) {
         var li = document.getElementById("crearRuta");
         li.parentNode.removeChild(li);
+    }
+}
+
+
+function abrirXMLNoticias(e) {
+    var xml = e.target.responseText;
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xml, "application/xml");
+    noticiasXML = xmlDoc.documentElement.getElementsByTagName("usuario");
+    if (accion == "cargarComentarios") {
+        cargarComentarios();
+
     }
 }
 
@@ -310,10 +322,10 @@ function agregarComentarios() {
         cont_coment++;
     }
 
-	agregarBtnSalir();
+    agregarBtnSalir();
 }
 
-function agregarBtnSalir(){
+function agregarBtnSalir() {
     var sidebar = document.getElementById("ulSidebar");
 
     var div = document.createElement("div");
@@ -323,7 +335,7 @@ function agregarBtnSalir(){
     btnSalir.setAttribute("class", "botonSubmit");
     btnSalir.setAttribute("value", "Cerrar Sesión");
     btnSalir.addEventListener("click", function () {
-        window.open("index.html","_self");
+        window.open("index.html", "_self");
     }, false);
     div.appendChild(btnSalir);
     sidebar.appendChild(div);
@@ -498,28 +510,36 @@ function dibujarRuta(lat_origen, lon_origen, lat_destino, lon_destino) {
 
 
 
-    //marcador_origen = new google.maps.LatLng(40.674389,-4.700432);
-
     var request = {
         origin: origen,
         destination: destino,
         travelMode: google.maps.TravelMode.DRIVING
     };
-    latlngbounds.extend(origen);
+    arreglo_lat_lng.push(origen);
 
-    latlngbounds.extend(destino);
+    arreglo_lat_lng.push(destino);
 
 
     directionsService.route(request, function (response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay2.setDirections(response);
 
-            map.setCenter(latlngbounds.getCenter());
-            map.fitBounds(latlngbounds);
+            ajustarApantalla();
             // setTimeout(initialize, 1);
 
         } else {
             alert("Ruta Imposible, marque una ruta posible");
         }
     });
+}
+
+
+function ajustarApantalla() {
+    var latlngbounds = new google.maps.LatLngBounds();
+
+    for (var k = 0; k < arreglo_lat_lng.length; k++) {
+        latlngbounds.extend(arreglo_lat_lng[k]);
+    }
+
+    map.setCenter(latlngbounds.getCenter(), map.getBoundsZoomLevel(latlngbounds));
 }
